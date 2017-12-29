@@ -1,7 +1,7 @@
 <uwsgi>
     <socket>:8077</socket>
     <chdir>/home/pi/github/hongda_v2/</chdir>
-    <module>hongda_v2/wsgi</module>
+    <module>hongda_v2/wsgi.py</module>
     <processes>1</processes>
     <daemonize>uwsgi.log</daemonize>
     <plugins>python</plugins>
