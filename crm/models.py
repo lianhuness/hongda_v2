@@ -14,7 +14,7 @@ class Client(models.Model):
     district = models.CharField(max_length=100)
     update_date = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s - %s"%(self.cid, self.company)
 #
 # def update_client_cid(sender, instance, **kwargs):
@@ -30,7 +30,7 @@ class Contactor(models.Model):
     tel = models.CharField(max_length=50, blank=True)
     address = models.TextField(blank=True, default='N/A')
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 def contact_upload_to(instance, filename):
@@ -60,7 +60,7 @@ class Order(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now = True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.orderID
 
     class Meta:

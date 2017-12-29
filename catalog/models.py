@@ -13,7 +13,7 @@ class Item(models.Model):
     description = models.TextField()
     updated_date = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return self.name
 
 
@@ -45,7 +45,7 @@ class SubItem(models.Model):
 
     updated_date = models.DateTimeField(auto_now=True)
 
-    def __str__(self):
+    def __unicode__(self):
         return "SKU: %s"%self.subsku
 
 def subitemphoto_upload_to(instance, filename):
