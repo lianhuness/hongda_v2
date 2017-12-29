@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+添加新订单
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    {{ order }} - 修改订单
+</h1>
+
+
+ <form action="{% url 'edit_order' id=order.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit" />
+    </form>
+
+
+{% endblock %}

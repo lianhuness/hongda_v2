@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    我的客户列表
+</h1>
+
+    <a href={% url 'add_client'  %}> 添加新客户 </a>
+
+    <div class="row">
+        <table class="table table-bordered table-striped">
+            <tr>
+                <th> CID </th>
+                <th> 客户 </th>
+                <th> 地区 </th>
+            </tr>
+
+            {% for client in clients %}
+                <tr>
+                    <td><a href={% url 'view_client' id=client.id %}> {{  client.cid  }}</a> </td>
+                    <td> {{ client.company }}</td>
+                    <td> {{  client.district }}</td>
+                </tr>
+
+            {% endfor %}
+
+        </table>
+    </div>
+
+
+{% endblock %}
