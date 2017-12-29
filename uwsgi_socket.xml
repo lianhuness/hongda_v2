@@ -4,4 +4,5 @@
     <module>hongda_v2/wsgi</module>
     <processes>1</processes>
     <daemonize>uwsgi.log</daemonize>
+    <plugins>python</plugins>
 </uwsgi>
