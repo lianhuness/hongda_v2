@@ -3,11 +3,6 @@ db.sqlite3
 media
 .idea
 
-
-
-
-*.pyc
 *.pyc
 backend/__pycache__/views.cpython-36.pyc
-*.pyc
-*.pyc
+
