@@ -41,7 +41,7 @@ class SubItem(models.Model):
     unitprice = models.DecimalField(max_digits=8, decimal_places=2,   default=0)
     cartonsize = models.CharField(max_length=50, help_text='装箱外箱尺寸',   default=0)
     qtypercarton = models.IntegerField(help_text='每箱的数量',  default=0)
-    cartongw = models.IntegerField(help_text='毛重',  default=0)
+    cartongw = models.DecimalField(max_digits=8, decimal_places=2, help_text='毛重',  default=0)
 
     updated_date = models.DateTimeField(auto_now=True)
 
