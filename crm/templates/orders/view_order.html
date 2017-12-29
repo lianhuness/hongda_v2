@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}
+查看订单-{{ order }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    {{ order }} - {{ order.created_date|date:"Y/m/d" }}
+</h1>
+
+    <div class="row">
+        <table class="table table-striped">
+            <tr>
+                <th> 订单号</th>
+                <th> 销售员</th>
+                <th> 创立日期</th>
+                <th> 状态 </th>
+                {% if request.user == order.user %}
+                    <th> 客户 </th>
+                    <th> 联系人 </th>
+                    <th> 金额 </th>
+                    <th> 折合RMB </th>
+                {% endif %}
+            </tr>
+            <tr>
+                <th> {{ order.orderID }}</th>
+                <th> {{ order.user }}</th>
+                <th> {{ order.created_date|date:'Y/m/d' }}</th>
+                <th> {{ order.get_status_display }} </th>
+                {% if request.user == order.user %}
+                    <th> {{ order.client }} </th>
+                    <th> {{ order.contactor }}</th>
+                    <th> {{ order.amount }}{{ order.currency }} </th>
+                    <th> {{ order.trueAmount }} </th>
+                {% endif %}
+            </tr>
+        </table>
+        <a href={% url 'edit_order' id=order.id %}> 修改订单</a>
+    </div>
+
+
+
+
+{% endblock %}

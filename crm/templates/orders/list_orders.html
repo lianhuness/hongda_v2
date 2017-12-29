@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+    我的订单
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    我的订单
+</h1>
+
+    <table class="table table-striped">
+        {% for order in order_list %}
+        <tr>
+            <td> <a href="{% url 'view_order' id=order.id %}">{{ order }}</a></td>
+            <td> {{ order.client }}</td>
+            <td> {{ order.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

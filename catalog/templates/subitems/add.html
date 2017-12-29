@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+    添加新产品分类
+{% endblock %}
+
+{% block container %}
+
+<h1>
+   {{ item }} - 添加分类
+</h1>
+
+
+ <form action="{% url 'add_subitem' id=item.id %}" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit" />
+    </form>
+
+{% endblock %}

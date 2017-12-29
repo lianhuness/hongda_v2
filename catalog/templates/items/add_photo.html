@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+    添加产品图片
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    {{ item }} - 添加图片
+</h1>
+
+
+ <form action="{% url 'add_itemphoto' id=item.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    客户 - {{ client.company }}
+</h1>
+    <a href={% url 'edit_client' id=client.id %}> 修改客户信息 </a>
+    <div class="row">
+        <table class="table table-bordered">
+            <tr>
+                <th> CID </th>
+                <th> 客户 </th>
+                <th> 地区 </th>
+            </tr>
+
+            <tr>
+                <td> {{  client.cid  }} </td>
+                <td> {{ client.company }}</td>
+                <td> {{  client.district }}</td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="row">
+        <h2> 联系人 </h2>
+        <a href={% url 'add_contactor' id=client.id %}> 添加联系人 </a>
+
+        <table class="table table-bordered">
+            {% for contactor in client.contactor_set.all %}
+                <tr>
+                    <td> <a href="{% url 'edit_contactor' id=contactor.id %}"> {{ contactor.name }} </a></td>
+                    <td> {{ contactor.email }}</td>
+                    <td> {{  contactor.tel }}</td>
+                    <td> {{  contactor.address }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div class="row">
+        <h2> 订单 </h2>
+        <a href={% url 'add_order' id=client.id %}> 添加新订单 </a>
+        <table class="table table-striped">
+            {% for order in client.order_set.all %}
+                <tr>
+                    <td> <a href={% url 'view_order' id=order.id %}>{{  order  }}</a></td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}
