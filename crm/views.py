@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from django.shortcuts import HttpResponse, render, redirect, reverse, get_object_or_404
 
 from django.contrib import messages
