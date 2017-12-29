@@ -49,8 +49,8 @@
       <file leaf-file-name="uwsgi_socket.xml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/uwsgi_socket.xml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="76">
-              <caret line="4" column="21" lean-forward="false" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
+            <state relative-caret-position="57">
+              <caret line="3" column="29" lean-forward="false" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
               <folding />
             </state>
           </provider>
@@ -547,7 +547,7 @@
         <state relative-caret-position="437">
           <caret line="23" column="69" lean-forward="false" selection-start-line="23" selection-start-column="60" selection-end-line="23" selection-end-column="69" />
           <folding>
-            <element signature="e#32#73#0" expanded="true" />
+            <element signature="e#32#73#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -646,7 +646,7 @@
         <state relative-caret-position="0">
           <caret line="0" column="24" lean-forward="false" selection-start-line="0" selection-start-column="24" selection-end-line="0" selection-end-column="24" />
           <folding>
-            <element signature="e#24#111#0" expanded="true" />
+            <element signature="e#24#111#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -711,8 +711,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/uwsgi_socket.xml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="21" lean-forward="false" selection-start-line="4" selection-start-column="21" selection-end-line="4" selection-end-column="21" />
+        <state relative-caret-position="57">
+          <caret line="3" column="29" lean-forward="false" selection-start-line="3" selection-start-column="29" selection-end-line="3" selection-end-column="29" />
           <folding />
         </state>
       </provider>
