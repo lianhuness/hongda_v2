@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}
+添加计划单 <!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    添加计划单
+</h1>
+    <ul>
+        <li>  订单号: {{ order }} </li>
+        <li> 客户 : {{ order.client }}</li>
+    </ul>
+
+
+ <form action="{% url 'add_jihuadan' id=order.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="添加计划单内容" />
+    </form>
+
+{% endblock %}

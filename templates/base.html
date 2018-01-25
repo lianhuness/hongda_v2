@@ -35,24 +35,64 @@
           <div class="navbar-header">
               <a class="navbar-brand" href="/">HDJY</a>
           </div>
-          <div>
+
+
               <ul class="nav navbar-nav">
                   {% if request.user.is_authenticated %}
                       <li><a href="{%  url 'items_list' %}">产品列表</a></li>
+
+                      {% if perms.auth.change_user %}
+                          <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                  管理员
+                                  <b class="caret"></b>
+                              </a>
+
+                              <ul class="dropdown-menu">
+                                  <li><a href="{%  url 'list_users' %}">用户列表</a></li>
+                                  <li><a href="{%  url 'edit_user' %}">修改用户</a></li>
+                              </ul>
+                          </li>
+                      {% endif %}
+
+                      {% if perms.crm.add_order %}
+                          <li class="dropdown">
+                              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                  CRM
+                                  <b class="caret"></b>
+                              </a>
+
+                              <ul class="dropdown-menu">
+                                  <li><a href="{%  url 'list_clients' %}">客户列表</a></li>
+                                  <li><a href="{%  url 'list_orders' %}">我的合同</a></li>
+                                  <li><a href="{%  url 'list_jihuadan' %}">我的计划单</a></li>
+                                  <li><a href="{% url 'crm_search' %}"> 搜索合同 </a></li>
+{#                                  <li><a href="#">Jasper Report</a></li>#}
+{#                                  <li class="divider"></li>#}
+{#                                  <li><a href="#">分离的链接</a></li>#}
+{#                                  <li class="divider"></li>#}
+{#                                  <li><a href="#">另一个分离的链接</a></li>#}
+                              </ul>
+                          </li>
+                      {% endif %}
+
+
                       <li class="dropdown">
                           <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                              CRM
+                              ERP
                               <b class="caret"></b>
                           </a>
 
                           <ul class="dropdown-menu">
-                              <li><a href="{%  url 'list_clients' %}">客户列表</a></li>
-                              <li><a href="{%  url 'list_orders' %}">我的合同</a></li>
-                              <li><a href="#">Jasper Report</a></li>
-                              <li class="divider"></li>
-                              <li><a href="#">分离的链接</a></li>
-                              <li class="divider"></li>
-                              <li><a href="#">另一个分离的链接</a></li>
+                              {% if perms.erp.add_jihuadan %}
+
+                                  <li class="divider"></li>
+                              {% endif %}
+
+                              <li><a href="{%  url 'subproducts' %}">我关注物料种类</a></li>
+                              <li><a href="{%  url 'myitems' %}">我的物料列表</a></li>
+                              <li><a href="{% url 'jhd_search' %}"> 搜索计划单 </a></li>
+
                           </ul>
                       </li>
                   {% endif %}

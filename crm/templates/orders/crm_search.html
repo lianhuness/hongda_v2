@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    搜索合同
+</h1>
+
+     <form action="{% url 'crm_search' %}" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="搜索" />
+    </form>
+
+
+    {% if orders|length > 0 %}
+        <table class="table">
+            <tr>
+                <th> 合同号 </th>
+                <th> 外部跟踪号</th>
+                <th> 内部跟踪号</th>
+                <th> 业务员 </th>
+                <th> 客户 </th>
+                <th> 建档时间</th>
+            </tr>
+
+            {% for order in orders %}
+                <tr>
+                    <td> {{ order }}</td>
+                    <td> {{ order.externalID }}</td>
+                    <td> {{ order.internalID }}</td>
+                    <td> {{ order.user }}</td>
+                    <td> {{ order.client }}</td>
+                    <td> {{ order.created_date }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2> 没有对应的合同 </h2>
+
+    {% endif %}
+{% endblock %}

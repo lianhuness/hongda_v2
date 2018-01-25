@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    计划单- {{ jhd}} - LOG
+</h1>
+
+
+    <h2> LOG </h2>
+    <ul>
+        {% for item in jhd.item_set.all %}
+            {% if item.itemlog_set.all|length > 0 %}
+                <li>
+                    {{ item }}
+                    <ul>
+                        {% for log in item.itemlog_set.all %}
+                        <li> {{ log }}</li>
+                        {% endfor %}
+                    </ul>
+                </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}

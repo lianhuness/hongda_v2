@@ -11,6 +11,8 @@ from django.contrib import messages
 
 # from .models import Article
 from .forms import LoginForm
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.models import User
 
 
 def index(request):
@@ -39,3 +41,12 @@ def logout(request):
     messages.success(request, '登出成功, Bye~')
     auth.logout(request)
     return HttpResponseRedirect('/')
+
+@permission_required('auth.change_user')
+def list_users(request):
+    users = User.objects.filter(is_superuser=False)
+    return render(request, 'list_users.html', {'users': users})
+
+def edit_user(request):
+
+    return render(request, 'edit_user.html')

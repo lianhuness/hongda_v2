@@ -35,11 +35,12 @@ class ContactorForm(forms.ModelForm):
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Order
-        fields = ('user', 'client',  'status', 'contactor', 'orderID','amount', 'currency',  'contract')
+        fields = ('user', 'client',  'status', 'contactor', 'externalID', 'internalID','amount', 'currency',  'contract')
         labels = {
             'client': '客户',
             'contactor':'联系人',
-            'orderID': '订单编号',
+            'externalID': '客户订单号/跟踪号',
+            'internalID': '内部跟踪号',
             'amount':'金额',
             'currency': '货币',
             'contract': '合同'

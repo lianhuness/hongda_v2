@@ -6,13 +6,14 @@
 {% block container %}
 
 <h1>
-    {{ order }} - {{ order.created_date|date:"Y/m/d" }}
+    查看订单 <mark> {{ order }} </mark> - {{ order.created_date|date:"Y/m/d" }}
 </h1>
 
     <div class="row">
         <table class="table table-striped">
             <tr>
-                <th> 订单号</th>
+                <th> 客户订单号</th>
+                <th> 内部跟踪号 </th>
                 <th> 销售员</th>
                 <th> 创立日期</th>
                 <th> 状态 </th>
@@ -24,7 +25,8 @@
                 {% endif %}
             </tr>
             <tr>
-                <th> {{ order.orderID }}</th>
+                <th> {{ order.externalID }}</th>
+                <th> {{ order.internalID }}</th>
                 <th> {{ order.user }}</th>
                 <th> {{ order.created_date|date:'Y/m/d' }}</th>
                 <th> {{ order.get_status_display }} </th>
@@ -39,7 +41,26 @@
         <a href={% url 'edit_order' id=order.id %}> 修改订单</a>
     </div>
 
+    <h2> 生产计划单 </h2>
+     <a href={% url 'add_jihuadan' id=order.id %}> 添加生产计划单 </a>
+        <table class="table">
+            {% for jhd in order.jihuadan_set.all %}
+            <tr>
+                <td> <a href={% url "view_jihuadan" id=jhd.id %}> {{ jhd }}  </a></td>
+                <td> {{ jhd.status }}</td>
+                <td> {{ jhd.created_date }}</td>
+                <td> {{ jhd.deliver_date }}</td>
+                <td> {{ jhd.item_set.all|length }}</td>
+                <td>
+                    查看
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    <h2> 收款记录</h2>
 
+    <h2> 发货记录 </h2>
 
+    <h2> 开票记录 </h2>
 
 {% endblock %}

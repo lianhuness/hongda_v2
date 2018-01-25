@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    我关注的产品
+</h1>
+
+    <h2> 已经关注的产品</h2>
+    <ul>
+        {% for sp in user.subscribeproduct_set.all %}
+        <li> {{ sp.get_product_display }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2> 添加新关注的产品</h2>
+    <form action="{% url 'subproducts'%}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="关注" />
+    </form>
+
+{% endblock %}

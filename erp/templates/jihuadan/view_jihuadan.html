@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    查看计划单 - {{ jhd.id }}
+    <mark> {{ jhd.status }} </mark>
+</h1>
+
+    {% if perms.erp.add_jihuadan %}
+    <div class="text-center">
+        <ul>
+            {% for action in jhd.getNextStatus %}
+                <li> <a href="{% url 'change_jhd_status' id=jhd.id status=action %}"> {{ action }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+   <table class="table">
+        <tr>
+            <th> 计划单号</th>
+            <th> 业务员</th>
+            <th> 销售订单号</th>
+            <th> 建立日期</th>
+            <th> 交货日期</th>
+        </tr>
+
+        <tr>
+            <td> {{ jhd }}</td>
+            <td> {{ jhd.user }}</td>
+            <td> {{ jhd.order }}</td>
+            <td> {{ jhd.created_date }}</td>
+            <td> {{ jhd.deliver_date }}</td>
+        </tr>
+   </table>
+
+    <h2> 物料列表</h2>
+    {% if perms.erp.add_jihuadan %}
+    <a href={% url 'add_jhd_item' id=jhd.id %}> 修改 </a>
+    {% endif %}
+
+    <table class="table">
+        <tr>
+            <th class="col-md-1">物料编号</th>
+            <th class="col-md-1">货源</th>
+            <th class="col-md-2">产品</th>
+            <th class="col-md-2">规格</th>
+            <th class="col-md-1">颜色</th>
+            <th class="col-md-1"> 数量</th>
+            <th class="col-md-1"> 状态</th>
+
+            <th class="col-md-2"> 备注 </th>
+            <th class="col-md-2"> 图片 </th>
+        </tr>
+        {% for item in jhd.item_set.all %}
+            <tr>
+                <td> {{ item }}</td>
+                <td> {{ item.get_source_display }}</td>
+                <td> {{ item.get_product_display }}</td>
+                <td> {{ item.specs }}</td>
+                <td> {{ item.color }}</td>
+                <td> {{ item.qty }}</td>
+                <td> {{ item.status }}</td>
+                <td> {{ item.note }}</td>
+                <td>
+                    {% if item.image %}
+                        <img height="50" src="{{item.image.url}}" />
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="{% url "view_jhd_log" id=jhd.id %}"> 查看历史纪录</a>
+
+
+{% endblock %}

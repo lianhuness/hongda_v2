@@ -22,5 +22,6 @@ urlpatterns = [
         url(r'^view/(?P<id>[0-9]+)$', views.view_order, name='view_order'),
         url(r'^edit/(?P<id>[0-9]+)$', views.edit_order, name='edit_order'),
         url(r'^add/(?P<id>[0-9]+)$', views.add_order, name='add_order'),
+        url(r'^crm_search', views.crm_search, name='crm_search'),
     ]), name='orders'),
 ]

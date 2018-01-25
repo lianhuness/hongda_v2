@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    添加计划单内容
+</h1>
+    <table class="table">
+        {% for item in jhd.item_set.all %}
+            <tr>
+                {% if jhd.status == 'DRAFT' %}
+                <td> <a href={% url 'del_jhd_item' id=item.id %} > 删除 </a></td>
+                {% endif %}
+                <td> {{ item.get_source_display }}</td>
+                <td> {{ item.get_product_display }}</td>
+                <td> {{ item.specs }}</td>
+                <td> {{ item.color }}</td>
+                <td> {{ item.qty }}</td>
+                <td> {{ item.note }}</td>
+                <td>
+                    {% if item.image %}
+                        <img height="50" src="{{item.image.url}}" />
+                    {% else %}
+                        No Image
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" action="{% url 'add_jhd_item' id=jhd.id %}"  enctype="multipart/form-data">
+    {%  csrf_token %}
+    <table class="table">
+        {{ form.as_table }}
+
+    </table>
+    <input type="submit" name="continue_add " value="添加并继续" />
+    <input type="submit" value="添加并完成" />
+        <a href={% url 'view_jihuadan' id=jhd.id %} > 返回计划单 </a>
+</form>
+{% endblock %}

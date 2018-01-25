@@ -15,6 +15,7 @@
             <td> <a href="{% url 'view_order' id=order.id %}">{{ order }}</a></td>
             <td> {{ order.client }}</td>
             <td> {{ order.get_status_display }}</td>
+            <td> {{ order.jihuadan_set.all|length }}</td>
         </tr>
         {% endfor %}
     </table>

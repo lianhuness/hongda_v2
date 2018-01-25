@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    搜索计划单
+</h1>
+
+     <form action="{% url 'jhd_search' %}" method="post">
+        {% csrf_token %}
+        <table>
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="搜索" />
+    </form>
+
+
+    {% if jhds|length > 0 %}
+        <table class="table">
+            <tr>
+                <th> 计划单号 </th>
+                <th> 内部跟踪号</th>
+                <th> 业务员 </th>
+                <th> 状态</th>
+            </tr>
+
+            {% for jhd in jhds %}
+                <tr>
+                    <td> <a href="{%url 'view_jihuadan' id=jhd.id %}"> {{ jhd }} </a></td>
+                    <td> {{ jhd.order }}</td>
+                    <td> {{ jhd.user }}</td>
+                    <td> {{ jhd.status  }}</td>
+                                    </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <h2> 没有对应的计划单 </h2>
+
+    {% endif %}
+{% endblock %}

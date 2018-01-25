@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}
+计划单列表
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    我的计划单列表
+</h1>
+
+    <table class="table">
+
+        <tr>
+            <th> 计划单号</th>
+            <th> 状态</th>
+            <th> 合同内部跟踪号</th>
+            <th> 客户</th>
+            <th> 创立时间</th>
+            <th> 交货时间</th>
+            <th> 物料数量</th>
+        </tr>
+        {% for jhd in jihuadans %}
+            <tr>
+                <td> <a href={% url "view_jihuadan" id=jhd.id %}> {{ jhd}} </a></td>
+                <td> {{ jhd.status }}</td>
+                <td> {{ jhd.order }}</td>
+                <td> {{ jhd.order.client }}</td>
+                <td> {{  jhd.created_date }}</td>
+                <td> {{ jhd.deliver_date }}</td>
+                <td> {{ jhd.item_set.all|length }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

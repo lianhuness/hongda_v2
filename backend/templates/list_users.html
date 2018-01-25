@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    LIST ALL USERS
+</h1>
+
+    <table class="table">
+        {% for user in users %}
+            <tr>
+                <td> {{ user.username }}</td>
+                <td> {{ user.get_all_permissions }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

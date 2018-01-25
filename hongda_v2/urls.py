@@ -24,8 +24,16 @@ urlpatterns = [
         url(r'^login/$', views.login, name='login'),
         url(r'^logout/$', views.logout, name='logout'),
     ]), name='auth'),
+
+    url(r'userpermission', include([
+url(r'^listusers/$', views.list_users, name='list_users'),
+url(r'^edit_user/$', views.edit_user, name='edit_user'),
+    ]), name='userpermission'),
+
     url(r'^$', views.index, name='index'),
 
     url(r'catalog/', include('catalog.urls')),
                   url(r'crm/', include('crm.urls')),
+    url(r'erp/', include('erp.erp_urls')),
+
 ]+ static( settings.MEDIA_URL , document_root=settings.MEDIA_ROOT )

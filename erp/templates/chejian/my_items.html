@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    我的计划单-物料
+</h1>
+
+    <h3> 包含产品 </h3>
+    <ul>
+        {% for sp in subproducts %}
+            <li> {{ sp.get_product_display }}</li>
+        {% endfor %}
+    </ul>
+
+    <h2> 我关心的物料 </h2>
+    <table class="table">
+        <tr>
+            <th> 物料单号</th>
+            <th> 计划单号</th>
+            <th> 品名</th>
+            <th> 业务员</th>
+            <th> 规格</th>
+            <th> 颜色</th>
+            <th> 数量</th>
+            <th> 附注</th>
+            <th> 图片</th>
+        </tr>
+        {% for item in items %}
+        <tr>
+            <td> {{ item }}</td>
+            <td> <a href="{% url 'view_jihuadan' id=item.jihuadan.id %}"> {{ item.jihuadan }}</a></td>
+
+            <td> {{ item.get_product_display }}</td>
+            <td> {{ item.jihuadan.user }}</td>
+
+            <td> {{  item.specs }}</td>
+            <td> {{ item.color }}</td>
+            <td> {{ item.qty }}</td>
+            <td> {{ item.note }}</td>
+            <td> {% if item.image %}
+                        <img height="50" src="{{item.image.url}}" />
+                    {% else %}
+                        No Image
+                    {% endif %}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="pagination">
+    <span class="step-links">
+        {% if items.has_previous %}
+            <a href="?page={{ items.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ items.number }} of {{ items.paginator.num_pages }}.
+        </span>
+
+        {% if items.has_next %}
+            <a href="?page={{ items.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+    </div>
+{% endblock %}
