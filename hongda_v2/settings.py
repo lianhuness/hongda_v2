@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'catalog',
     'crm',
     'erp',
+    'erp_simple',
 ]
 
 MIDDLEWARE = [

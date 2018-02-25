@@ -24,12 +24,13 @@ class Jihuadan(models.Model):
 
     def getNextStatus(self):
         if self.status == 'DRAFT':
-            return ['SUBMIT','CANCEL']
-        elif self.status == 'SUBMIT':
-            return ['DELIVER', 'CANCEL']
-        elif self.status == 'DELIVER':
-            return ['COMPLETE', 'CANCEL']
-
+            return ['PENDING', 'CANCEL']
+        if self.status == 'PENDING':
+            return ['COMPLETE','CANCEL']
+        elif self.status == 'COMPLETE':
+            return []
+        elif self.status == 'CANCEL':
+            return []
         return []
 
 SOURCE_CHOICES = (
@@ -68,10 +69,7 @@ class Item(models.Model):
     qty = models.PositiveIntegerField()
     note = models.CharField(max_length=200)
     image = models.ImageField(upload_to=item_logo_upload_to, blank=True)
-
-    status = models.CharField(max_length=10, default='DRAFT')
-
-
+    status = models.CharField(max_length=10, default='PENDING')
 
     def __str__(self):
         return "%s-%s" %(self.jihuadan, self.id)

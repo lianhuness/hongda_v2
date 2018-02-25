@@ -31,7 +31,7 @@
 
             {% for order in orders %}
                 <tr>
-                    <td> {{ order }}</td>
+                    <td> <a href="{% url 'view_order' id=order.id %}"> {{ order }} </a> </td>
                     <td> {{ order.externalID }}</td>
                     <td> {{ order.internalID }}</td>
                     <td> {{ order.user }}</td>

@@ -6,10 +6,45 @@
 {% block container %}
 
 <h1>
-    我的客户列表
+    我的客户列表 - 共 {{ clients|length }}个
 </h1>
 
     <a href={% url 'add_client'  %}> 添加新客户 </a>
+
+        <table class="table table-bordered">
+            <tr>
+                {% if level == 0 %}
+                    <td> <mark> 所有的客人 </mark></td>
+                {% else %}
+                    <td> <a href="{% url 'list_all_clients' %}"> 所有的客人</a></td>
+                {% endif %}
+
+                {% if level == 1 %}
+                    <td> <mark> 潜在的客人 </mark></td>
+                {% else %}
+                    <td> <a href="{% url 'list_clients' level=1 %}"> 潜在的客人</a></td>
+                {% endif %}
+
+                {% if level == 2 %}
+                    <td> <mark> 进展中的客人 </mark></td>
+                {% else %}
+                    <td> <a href="{% url 'list_clients' level=2 %}"> 进展中的客人</a></td>
+                {% endif %}
+
+                {% if level == 3 %}
+                    <td> <mark> 重要的客人 </mark></td>
+                {% else %}
+                    <td> <a href="{% url 'list_clients' level=3 %}"> 重要的客人</a></td>
+                {% endif %}
+
+                {% if level == 4 %}
+                    <td> <mark> 有问题的客人 </mark></td>
+                {% else %}
+                    <td> <a href="{% url 'list_clients' level=4 %}"> 有问题的客人</a></td>
+                {% endif %}
+            </tr>
+        </table>
+
 
     <div class="row">
         <table class="table table-bordered table-striped">
@@ -17,13 +52,29 @@
                 <th> CID </th>
                 <th> 客户 </th>
                 <th> 地区 </th>
+                <th> 重要性</th>
+                <th> 记录操作 </th>
+                <th> 急需操作 </th>
             </tr>
 
             {% for client in clients %}
                 <tr>
                     <td><a href={% url 'view_client' id=client.id %}> {{  client.cid  }}</a> </td>
-                    <td> {{ client.company }}</td>
+
+                    <td> {% if client.needUpdate %}
+                        <strong>{{ client.company }} <strong/>
+                        {% else %}
+                        {{ client.company }}
+                        {% endif %}
+                    </td>
                     <td> {{  client.district }}</td>
+                    <td> {{ client.level_display }}</td>
+                    <td>
+                        <a href="{% url 'view_client_log' id=client.id %}">
+                        {{ client.clientlog_set.first }}
+                        </a>
+                    </td>
+                    <td> {{ client.needUpdate }}</td>
                 </tr>
 
             {% endfor %}

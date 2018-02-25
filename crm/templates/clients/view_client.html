@@ -8,26 +8,41 @@
 <h1>
     客户 - {{ client.company }}
 </h1>
-    <a href={% url 'edit_client' id=client.id %}> 修改客户信息 </a>
+    {% if client.needUpdate %}
+        <h2> <mark> 需要跟踪 </mark></h2>
+    {% endif %}
+
+    <table class="table">
+        <tr>
+            <td> <a href={% url 'edit_client' id=client.id %}> 修改客户信息 </a> </td>
+            <td>  <a href={% url 'view_client_log' id=client.id %}> 查看记录 </a> </td>
+            <td> <a href={% url 'add_contactor' id=client.id %}> 添加联系人 </a> </td>
+            <td> <a href={% url 'add_order' id=client.id %}> 添加新订单 </a> </td>
+        </tr>
+    </table>
+
+
     <div class="row">
         <table class="table table-bordered">
             <tr>
                 <th> CID </th>
                 <th> 客户 </th>
                 <th> 地区 </th>
+                <th> 等级 </th>
             </tr>
 
             <tr>
                 <td> {{  client.cid  }} </td>
                 <td> {{ client.company }}</td>
                 <td> {{  client.district }}</td>
+                <td> {{ client.get_level_display }}</td>
             </tr>
         </table>
     </div>
 
     <div class="row">
         <h2> 联系人 </h2>
-        <a href={% url 'add_contactor' id=client.id %}> 添加联系人 </a>
+
 
         <table class="table table-bordered">
             {% for contactor in client.contactor_set.all %}
@@ -42,13 +57,16 @@
     </div>
 
 
+
     <div class="row">
         <h2> 订单 </h2>
-        <a href={% url 'add_order' id=client.id %}> 添加新订单 </a>
+
         <table class="table table-striped">
             {% for order in client.order_set.all %}
                 <tr>
                     <td> <a href={% url 'view_order' id=order.id %}>{{  order  }}</a></td>
+                    <td> {{ order.created_date }}</td>
+                    <td> {{ order.get_status_display }}</td>
                 </tr>
             {% endfor %}
         </table>

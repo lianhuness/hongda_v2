@@ -35,12 +35,17 @@ def add_jihuadan(request, id):
 
 def del_jhd_item(request, id):
     item = get_object_or_404(Item, pk=id)
+    return HttpResponse(item.jihuadan.status)
+    if item.jihuadan.status is not "DRAFT":
+        return HttpResponse("No Permission to delete in current status!")
     item.delete()
     messages.success(request, '成功删除')
     return redirect(reverse('add_jhd_item', kwargs={'id': item.jihuadan.id}))
 
 def add_jhd_item(request, id):
     jhd = get_object_or_404(Jihuadan, pk=id)
+    if jhd.status != "DRAFT":
+        return HttpResponse("No permission to edit in current status !")
 
     if request.method == "POST":
         form = JhdItemForm(request.POST, request.FILES)

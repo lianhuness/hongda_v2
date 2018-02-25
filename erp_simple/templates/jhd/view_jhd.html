@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}
+    计划单- {{ jhd.id }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    计划单-{{ jhd.id }} - {{ jhd.status }}
+</h1>
+
+{% if jhd.user == request.user %}
+    {% if jhd.is_complete == False %}
+        <a href={% url 'erp_complete_jhd' id=jhd.id %}> 标记完成</a>
+    {% endif %}
+    </br>
+    {% if jhd.is_delete == False %}
+        <a href={% url 'erp_delete_jhd' id=jhd.id %}> 标记取消 </a>
+    {% endif %}
+{% endif %}
+
+
+    <table class="table table-bordered">
+        <tr>
+            <th> 业务员 </th>
+            <th> 创立日期 </th>
+            <th> 最近跟新日期</th>
+            <th> 合同号 </th>
+        </tr>
+        <tr>
+            <td> {{ jhd.user }}</td>
+            <td> {{ jhd.created_date }}</td>
+            <td> {{ jhd.updated_date }}</td>
+            <th> {{ jhd.order }}</th>
+        </tr>
+
+    </table>
+
+    生产计划单文件: <a href={{ jhd.file.url }}> {{ jhd.file.name }} </a>
+
+
+    <table class="table  table-bordered">
+        {% for file in jhd.jhd_file_set.all %}
+            <tr>
+                <td> {{ file.created_date }}</td>
+                <td> {{ file.user }}</td>
+                <td> {{ file.title  }}</td>
+                <td> <a href={{ file.file.url}}> {{ file.file.name }}</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+
+    <h2> 文件 </h2>
+    {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'erp_add_jhd_file' id=jhd.id %}"  enctype="multipart/form-data">
+            {%  csrf_token %}
+            <table class="table">
+                {{ file_form.as_table }}
+            </table>
+        <input type="submit" value="上传文件" />
+        </form>
+    {% endif %}
+
+
+
+
+
+    <h2> LOG </h2>
+    {% if request.user.is_authenticated %}
+        <form method="post" action="{% url 'erp_add_jhd_log' id=jhd.id %}" >
+            {%  csrf_token %}
+            <table class="table">
+                {{ log_form.as_table }}
+            </table>
+        <input type="submit" value="留言" />
+        </form>
+    {% endif %}
+
+    <table class="table  table-bordered">
+        {% for log in jhd.jhd_log_set.all %}
+            <tr>
+                <td> {{ log.created_date }}</td>
+                <td> {{ log.user }}</td>
+                <td> {{ log.message }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

@@ -13,10 +13,14 @@ from django import forms
 from django.contrib.auth.decorators import permission_required
 
 @permission_required('crm.add_order')
-def list_clients(request):
-    clients = request.user.client_set.all()
+def list_clients(request, level):
+    clients = request.user.client_set.filter(level=level).all()
+    return render(request, 'clients/list_clients.html', {'clients': clients, 'level':level})
 
-    return render(request, 'clients/list_clients.html', {'clients': clients})
+@permission_required('crm.add_order')
+def list_all_clients(request):
+    clients = request.user.client_set.all()
+    return render(request, 'clients/list_clients.html', {'clients': clients, 'level':0})
 
 @permission_required('crm.add_order')
 def add_client(request):
@@ -27,6 +31,7 @@ def add_client(request):
             client.cid = "C-%s"%Client.objects.count()
             client.save()
             messages.success(request, '客户信息添加成功!')
+            client.addLog(request, u'添加信息')
             return redirect(reverse('add_contactor', kwargs={'id': client.id}))
     else:
         form = ClientForm()
@@ -41,6 +46,7 @@ def edit_client(request, id):
         form = ClientForm(request.POST, instance=client)
         if form.is_valid():
             client = form.save()
+            client.addLog(request, u'修改客人信息')
             messages.success(request, '客户信息修改成功!')
             return redirect(reverse('view_client', kwargs={'id': client.id}))
     else:
@@ -51,12 +57,18 @@ def edit_client(request, id):
 @permission_required('crm.add_order')
 def view_client(request, id):
     client = get_object_or_404(Client, pk=id)
+    if client.user == request.user or request.user.canViewOrder:
+        return render(request, 'clients/view_client.html', {'client': client})
+    else:
+        return HttpResponse(u'没有权限， 联系管理员')
 
-    return render(request, 'clients/view_client.html', {'client': client})
 
 @permission_required('crm.add_order')
 def add_contactor(request, id):
     client = get_object_or_404(Client, pk=id)
+    if client.user != request.user and request.user.canViewOrder() == False:
+        return HttpResponse("No Permission")
+
     if request.method == 'POST':
         form = ContactorForm(request.POST)
         if form.is_valid():
@@ -71,6 +83,7 @@ def add_contactor(request, id):
 @permission_required('crm.add_order')
 def edit_contactor(request, id):
     contactor = get_object_or_404(Contactor, pk=id)
+
     if request.method == 'POST':
         form = ContactorForm(request.POST, instance=contactor)
         if form.is_valid():
@@ -96,6 +109,8 @@ def addOrderRecord(request, order,  msg):
 @permission_required('crm.add_order')
 def add_order(request, id):
     client = get_object_or_404(Client, pk=id)
+    if client.user != request.user and request.user.canViewOrder() == False:
+        return HttpResponse("No Permission")
 
     if request.method == 'POST':
         form = OrderForm(request.POST, request.FILES)
@@ -115,6 +130,8 @@ def add_order(request, id):
 @permission_required('crm.add_order')
 def edit_order(request, id):
     order = get_object_or_404(Order, pk=id)
+    if order.user != request.user and request.user.canViewOrder() == False:
+        return HttpResponse("No Permission")
 
     if request.method == 'POST':
         form = OrderForm(request.POST, request.FILES, instance=order)
@@ -130,6 +147,9 @@ def edit_order(request, id):
 @permission_required('crm.add_order')
 def view_order(request, id):
     order = get_object_or_404(Order, pk=id)
+    if order.user != request.user and request.user.canViewOrder() == False:
+        return HttpResponse("No Permission")
+
     return render(request, 'orders/view_order.html', {'order': order})
 
 
@@ -158,4 +178,51 @@ def crm_search(request):
         form = SearchForm()
 
     return render(request, 'orders/crm_search.html', {'form': form, 'orders': orders})
+
+
+from django import forms
+from .models import ClientLog
+
+class ClientLogForm(forms.ModelForm):
+    class Meta:
+        model = ClientLog
+        fields = ('user', 'client', 'note', 'file', 'next_date')
+        labels = {
+            'note': '记录',
+            'file': '文件',
+            'next_date': u'下一次的时间(年/月/日)'
+        }
+    def __init__(self, *args, **kwargs):
+        super(ClientLogForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = forms.HiddenInput()
+        self.fields['client'].widget = forms.HiddenInput()
+
+
+@permission_required('crm.add_order')
+def add_client_log(request, id):
+    if request.method == 'POST':
+        form = ClientLogForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'LOG added!')
+        else:
+            for i in form.errors:
+                messages.error(request, form.errors[i])
+
+    return redirect(reverse('view_client_log', kwargs={'id': id}))
+
+
+
+
+@permission_required('crm.add_order')
+def view_client_log(request,id):
+    client = get_object_or_404(Client, pk=id)
+
+    addLogForm = ClientLogForm()
+    addLogForm.fields['user'].initial = request.user
+    addLogForm.fields['client'].initial = client
+
+    return render(request, 'clients/view_log.html', {'client': client, 'addLogForm': addLogForm})
+
+
 

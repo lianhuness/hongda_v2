@@ -41,7 +41,8 @@
                   {% if request.user.is_authenticated %}
                       <li><a href="{%  url 'items_list' %}">产品列表</a></li>
 
-                      {% if perms.auth.change_user %}
+{#                      {% if perms.auth.change_user %}#}
+                        {% if user.isManager %}
                           <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                   管理员
@@ -55,7 +56,7 @@
                           </li>
                       {% endif %}
 
-                      {% if perms.crm.add_order %}
+                      {% if user.isSales %}
                           <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                   CRM
@@ -63,9 +64,9 @@
                               </a>
 
                               <ul class="dropdown-menu">
-                                  <li><a href="{%  url 'list_clients' %}">客户列表</a></li>
+                                  <li><a href="{%  url 'list_all_clients' %}">客户列表</a></li>
                                   <li><a href="{%  url 'list_orders' %}">我的合同</a></li>
-                                  <li><a href="{%  url 'list_jihuadan' %}">我的计划单</a></li>
+                                  <li><a href="{%  url 'erp_my_jihuadan' show='PENDING'%}">我的计划单</a></li>
                                   <li><a href="{% url 'crm_search' %}"> 搜索合同 </a></li>
 {#                                  <li><a href="#">Jasper Report</a></li>#}
 {#                                  <li class="divider"></li>#}
@@ -84,14 +85,11 @@
                           </a>
 
                           <ul class="dropdown-menu">
-                              {% if perms.erp.add_jihuadan %}
+                              <li><a href="{%  url 'erp_search_jhd' %}">计划单搜索</a></li>
 
-                                  <li class="divider"></li>
-                              {% endif %}
-
-                              <li><a href="{%  url 'subproducts' %}">我关注物料种类</a></li>
-                              <li><a href="{%  url 'myitems' %}">我的物料列表</a></li>
-                              <li><a href="{% url 'jhd_search' %}"> 搜索计划单 </a></li>
+{#                              <li><a href="{%  url 'subproducts' %}">我关注物料种类</a></li>#}
+{#                              <li><a href="{%  url 'myitems' %}">我的物料列表</a></li>#}
+{#                              <li><a href="{% url 'jhd_search' %}"> 搜索计划单 </a></li>#}
 
                           </ul>
                       </li>

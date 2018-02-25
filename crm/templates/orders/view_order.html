@@ -41,22 +41,35 @@
         <a href={% url 'edit_order' id=order.id %}> 修改订单</a>
     </div>
 
+
     <h2> 生产计划单 </h2>
-     <a href={% url 'add_jihuadan' id=order.id %}> 添加生产计划单 </a>
+     <a href={% url 'erp_add_jihuadan' id=order.id %}> 添加生产计划单 </a>
         <table class="table">
-            {% for jhd in order.jihuadan_set.all %}
+            {% for jhd in order.jhd_set.all %}
             <tr>
-                <td> <a href={% url "view_jihuadan" id=jhd.id %}> {{ jhd }}  </a></td>
-                <td> {{ jhd.status }}</td>
+                <td> <a href={% url 'erp_view_jihuadan' id=jhd.id %}> {{ jhd.id }}  </a></td>
                 <td> {{ jhd.created_date }}</td>
-                <td> {{ jhd.deliver_date }}</td>
-                <td> {{ jhd.item_set.all|length }}</td>
-                <td>
-                    查看
-                </td>
+                <td> {{ jhd.status }}</td>
+                <td> {{ jhd.lastUpdate }}</td>
             </tr>
             {% endfor %}
         </table>
+{#    <h2> 生产计划单 </h2>#}
+{#     <a href={% url 'add_jihuadan' id=order.id %}> 添加生产计划单 </a>#}
+{#        <table class="table">#}
+{#            {% for jhd in order.jihuadan_set.all %}#}
+{#            <tr>#}
+{#                <td> <a href={% url "view_jihuadan" id=jhd.id %}> {{ jhd }}  </a></td>#}
+{#                <td> {{ jhd.status }}</td>#}
+{#                <td> {{ jhd.created_date }}</td>#}
+{#                <td> {{ jhd.deliver_date }}</td>#}
+{#                <td> {{ jhd.item_set.all|length }}</td>#}
+{#                <td>#}
+{#                    查看#}
+{#                </td>#}
+{#            </tr>#}
+{#            {% endfor %}#}
+{#        </table>#}
     <h2> 收款记录</h2>
 
     <h2> 发货记录 </h2>

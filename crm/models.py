@@ -4,7 +4,14 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 from django.db.models.signals import pre_save
+import datetime
 
+CLIENT_LEVEL = (
+    (1, u'潜在客人'),
+    (2, u'进展中的客人'),
+    (3, u'重要的客人'),
+    (4, u'有问题的客人'),
+)
 
 class Client(models.Model):
     user = models.ForeignKey(User)
@@ -12,9 +19,28 @@ class Client(models.Model):
     company = models.CharField(max_length=200, unique=True)
     district = models.CharField(max_length=100)
     update_date = models.DateTimeField(auto_now=True)
+    level = models.PositiveSmallIntegerField(choices=CLIENT_LEVEL, default=1)
+
 
     def __str__(self):
         return "%s - %s" % (self.cid, self.company)
+
+    def addLog(self, request, log):
+        self.clientlog_set.create(user=request.user, note=log)
+
+    def level_display(self):
+
+        for (i,k) in CLIENT_LEVEL:
+            if self.level == i:
+                return k
+        return 'NONE'
+
+
+    def needUpdate(self):
+        log = self.clientlog_set.first()
+        if log and log.next_date:
+            return log.next_date <= datetime.datetime.today().date()
+        return False
 
 #
 # def update_client_cid(sender, instance, **kwargs):
@@ -22,6 +48,26 @@ class Client(models.Model):
 #     print(" \n\n *** hello **** ")
 #
 # pre_save.connect(update_client_cid, sender=Client)
+
+def client_file_upload_to(instance, filename):
+    directory =  '/'.join(['Client', instance.client.cid, 'files', filename])
+    return directory
+
+class ClientLog(models.Model):
+    client = models.ForeignKey(Client)
+    user = models.ForeignKey(User)
+    note = models.TextField()
+    file = models.FileField(upload_to=client_file_upload_to, blank=True,null=True)
+    created_date = models.DateTimeField(auto_now_add=True)
+    next_date = models.DateField(blank=True,null=True)
+
+    def __str__(self):
+        return "%s:%s"%(self.created_date.date(), self.note)
+
+    class Meta:
+        ordering=['-created_date']
+
+
 
 class Contactor(models.Model):
     client = models.ForeignKey(Client)

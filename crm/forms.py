@@ -7,10 +7,11 @@ from .models import Client, Contactor, Order
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ('user', 'company', 'district')
+        fields = ('user', 'company', 'district','level')
         labels = {
             'company': '公司名称',
-            'district': '地区'
+            'district': '地区',
+            'level': '客户级别'
         }
     def __init__(self, *args, **kwargs):
         super(ClientForm, self).__init__(*args, **kwargs)

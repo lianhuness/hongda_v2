@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+添加计划单
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    添加计划单
+</h1>
+    <h2> 订单 - {{ order  }}</h2>
+    上传计划单文件， 订单编号系统自动产生。
+
+        <form method="post" action="{% url 'erp_add_jihuadan' id=order.id %}"  enctype="multipart/form-data">
+            {%  csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+
+            </table>
+        <input type="submit" name="continue_add " value="添加" />
+        </form>
+{% endblock %}
