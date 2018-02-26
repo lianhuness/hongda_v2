@@ -1,3 +1,5 @@
+# -*- coding: UTF-8 -*-
+
 from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, reverse
 from .models import Jhd, JhdForm, JhdFile_form, JhdLog_form
 from crm.models import Order
