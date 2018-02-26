@@ -22,7 +22,7 @@ class Client(models.Model):
     level = models.PositiveSmallIntegerField(choices=CLIENT_LEVEL, default=1)
 
 
-    def __str__(self):
+    def __unicode__(self):
         return "%s - %s" % (self.cid, self.company)
 
     def addLog(self, request, log):
@@ -61,8 +61,8 @@ class ClientLog(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     next_date = models.DateField(blank=True,null=True)
 
-    def __str__(self):
-        return "%s:%s"%(self.created_date.date(), self.note)
+    def __unicode__(self):
+        return u"%s:%s"%(self.created_date.date(), self.note)
 
     class Meta:
         ordering=['-created_date']

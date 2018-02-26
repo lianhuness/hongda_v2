@@ -5,4 +5,6 @@
     <processes>1</processes>
     <daemonize>/tmp/uwsgi.log</daemonize>
     <plugins>python</plugins>
+    <LANG>en_US.UTF-8</LANG>
+    <LANGUAGE>en_US.UTF-8</LANGUAGE>
 </uwsgi>
