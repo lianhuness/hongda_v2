@@ -4,6 +4,7 @@ from django.shortcuts import render, HttpResponse, redirect, get_object_or_404, 
 from .models import Jhd, JhdForm, JhdFile_form, JhdLog_form
 from crm.models import Order
 from django.contrib import messages
+from django.contrib.auth.decorators import permission_required
 
 # Create your views here.
 
@@ -108,18 +109,55 @@ class SearchForm(forms.Form):
 
 
 def search_jhd(request):
-    orders = []
+    jhds = []
+    try:
+        if request.method == 'POST':
+            form = SearchForm(request.POST)
+            if form.is_valid():
+                if form.cleaned_data['type']=='jhd':
+                    jhds = Jhd.objects.filter( id = int(form.cleaned_data['search_key'])).all()
+
+                elif form.cleaned_data['type']=='sales':
+                    jhds = Jhd.objects.filter(user__username = form.cleaned_data['search_key']).all()
+        else:
+            form = SearchForm()
+    except (TypeError, ValueError):
+        messages.error(request, u'输入的信息不对')
+
+    return render(request, 'jhd/search_jhd.html', {'form': form, 'jhds': jhds})
+
+
+from .models import HouquanLiuchen, HouquanLiuchenForm
+def houquan_list_liuchandan(request):
+    lcds = HouquanLiuchen.objects.all()
+    return render(request, 'houquan/list_liuchandan.html', {'lcds': lcds})
+
+def houquan_view_liuchendan(request, id):
+    lcd = get_object_or_404(HouquanLiuchen, pk=id)
+    return render(request, 'houquan/view_liuchendan.html', {'lcd': lcd})
+
+@permission_required('erp_simple.add_houquanliuchen')
+def houquan_add_liuchendan(request):
     if request.method == 'POST':
-        form = SearchForm(request.POST)
+        form = HouquanLiuchenForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data['type']=='jhd':
-                import pdb
-                pdb.set_trace()
-                jhds = Jhd.objects.filter( id = form.cleaned_data['jhd']).all()
-            elif form.cleaned_data['type']=='sales':
-                jhds = Jhd.objects.filter(user_username = form.cleaned_data['sales']).all()
+            lcd = form.save()
+            return redirect(reverse('erp_houquan_list_liuchandan'))
     else:
-        form = SearchForm()
+        form = HouquanLiuchenForm()
+        form.fields['user'].initial = request.user
 
-    return render(request, 'jhd/search_jhd.html', {'form': form, 'jhds': orders})
+    return render(request, 'houquan/add_liuchandan.html', {'form': form})
 
+@permission_required('erp_simple.add_houquanliuchen')
+def houquan_edit_liuchendan(request, id):
+    lcd = get_object_or_404(HouquanLiuchen, pk=id)
+    if request.method == 'POST':
+        form = HouquanLiuchenForm(request.POST)
+        if form.is_valid():
+            lcd = form.save()
+            return redirect(reverse('erp_houquan_view_liuchendan', kwargs={'id': lcd.id}))
+    else:
+        form = HouquanLiuchenForm(instance=lcd)
+
+    return render(request, 'houquan/edit_liuchandan.html', {'form': form, 'lcd': lcd})

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    厚圈的流程单 - {{ lcds|length }}
+</h1>
+
+    ** TBD ** 添加搜索功能， 按照产线， 按照生产日期， 按照颜色， 按照工人
+    <table class="table table-striped table-bordered">
+        {% for lcd in lcds %}
+            <tr>
+                <td> <a href={% url 'erp_houquan_view_liuchendan' id=lcd.id %}> 查看 </a> - {{ lcd.id }} - {{ lcd.get_is_delete_display }}</td>
+                <td> {{ lcd.start_date }}</td>
+                <td> {{ lcd.get_group_display }}</td>
+                <td> {{ lcd.line }}</td>
+                <td> {{ lcd.worker }}</td>
+                <td> {{ lcd.jihuadan }}</td>
+                <td> {{ lcd.color }}</td>
+                <td> {{ lcd.jihua_dapian }}</td>
+                <td> {{ lcd.shiji_dapian }}</td>
+
+            </tr>
+        {%  endfor %}
+    </table>
+
+
+{% endblock %}

@@ -21,6 +21,15 @@ urlpatterns = [
         url(r'^complete/(?P<id>[0-9]+$)', views.complete_jihuadan, name='erp_complete_jhd'),
     ]), name='jihuadan'),
 
+    url(r'^houquan/', include([
+        url(r'^$', views.houquan_list_liuchandan, name='erp_houquan_list_liuchandan'),
+        url(r'^addliuchendan$', views.houquan_add_liuchendan, name='erp_houquan_add_liuchendan'),
+        url(r'^view/(?P<id>[0-9]+$)', views.houquan_view_liuchendan, name='erp_houquan_view_liuchendan'),
+        url(r'^edit/(?P<id>[0-9]+$)', views.houquan_edit_liuchendan, name='erp_houquan_edit_liuchendan'),
+
+
+    ])),
+
     url(r'^erp/', include([
         url(r'^search_jhd$', views.search_jhd, name='erp_search_jhd'),
 

@@ -21,7 +21,9 @@ class Jhd(models.Model):
     is_complete = models.BooleanField(default=False)
 
     def __unicode__(self):
-        return self.id
+        return str(self.id)
+    def __str__(self):
+        return self.__unicode__()
 
     def add_log(self, request, message):
         self.jhd_log_set.create(user=request.user, message=message)
@@ -98,3 +100,62 @@ class JhdFile_form(ModelForm):
         super(JhdFile_form, self).__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()
         self.fields['jhd'].widget = forms.HiddenInput()
+
+JIHUADAN_GROUP = (
+    (1, u'常规货'),
+    (2, u'迪卡侬'),
+)
+
+IS_DELETE_CHOICE=(
+    (False, u'有效流程单'),
+    (True, u'无效流程单'),
+)
+
+import datetime
+
+def get_next_day():
+    return datetime.date.today() + datetime.timedelta(days=1)
+
+class HouquanLiuchen(models.Model):
+    user = models.ForeignKey(User)
+    created_date = models.DateField(auto_now_add=True)
+    jihuadan = models.CharField(max_length=10, null=True, blank=True)
+    group = models.PositiveSmallIntegerField(choices=JIHUADAN_GROUP, default=1)
+    line = models.PositiveIntegerField()
+    worker = models.CharField(max_length=50)
+    color = models.CharField(max_length=10)
+    jihua_dapian = models.PositiveIntegerField(default=0)
+    shiji_dapian = models.PositiveIntegerField(default=0)
+    start_date = models.DateField(default=get_next_day)
+
+    is_delete = models.BooleanField(default=False, choices=IS_DELETE_CHOICE)
+
+    def __unicode__(self):
+        return self.id
+    def __str__(self):
+        return self.__unicode__()
+
+    class Meta:
+        ordering = ['-id']
+
+# 厚圈流程单
+class HouquanLiuchenForm(ModelForm):
+    class Meta:
+        model = HouquanLiuchen
+        fields=('user', 'jihuadan', 'group', 'line', 'worker', 'color', 'jihua_dapian', 'shiji_dapian', 'start_date', 'is_delete')
+        labels={
+            'jihuadan': u'计划单号',
+            'group': u'分类',
+            'line': u'几号线',
+            'worker': u'操作工',
+            'color': u'颜色',
+            'jihua_dapian': u'计划大片数',
+            'shiji_dapian': u'实际大片数',
+            'start_date': u'一线生产日期',
+            'is_delete': u'此流程单是否有效',
+        }
+
+    def __init__(self, *args, **kwargs):
+        super(HouquanLiuchenForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = forms.HiddenInput()
+

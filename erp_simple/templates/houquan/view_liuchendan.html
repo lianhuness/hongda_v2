@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}
+查看流程单 - {{ lcd.id }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+   流程单 - {{ lcd.id }} -- {{ lcd.get_is_delete_display }}
+</h1>
+
+    <table class="table table-boarded">
+        <tr>
+            <td> <a href={% url 'erp_houquan_add_liuchendan' %}> 添加新的流程单 </a> </td>
+            <td> <a href={% url 'erp_houquan_edit_liuchendan' id=lcd.id %}> 修改这个流程单 </a> </td>
+        </tr>
+    </table>
+
+    <table class="table">
+        <tr>
+            <td> {{ lcd.id }}</td>
+            <td> {{ lcd.start_date }}</td>
+            <td> {{ lcd.get_group_display }}</td>
+            <td> {{ lcd.line }}</td>
+            <td> {{ lcd.worker }}</td>
+            <td> {{ lcd.jihuadan }}</td>
+            <td> {{ lcd.color }}</td>
+            <td> {{ lcd.jihua_dapian }}</td>
+            <td> {{ lcd.shiji_dapian }}</td>
+
+        </tr>
+    </table>
+{% endblock %}

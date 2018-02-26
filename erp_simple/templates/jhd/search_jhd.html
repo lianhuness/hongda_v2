@@ -9,7 +9,7 @@
     搜索计划单
 </h1>
 
- <form action="{% url 'jhd_search' %}" method="post">
+ <form action="{% url 'erp_search_jhd' %}" method="post">
         {% csrf_token %}
         <table>
             {{ form.as_table }}

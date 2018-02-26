@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}
+修改流程单- {{ lcd.id }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+   修改流程单- {{ lcd.id }}
+</h1>
+
+        <form method="post" action="{% url 'erp_houquan_edit_liuchendan' id=lcd.id%}">
+            {%  csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+
+            </table>
+        <input type="submit" name="continue_add " value="修改" />
+        </form>
+{% endblock %}

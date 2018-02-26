@@ -13,17 +13,32 @@ CLIENT_LEVEL = (
     (4, u'有问题的客人'),
 )
 
+CLIENT_SOURCE = (
+    (0, u'老客户'),
+    (1, u'1688询盘'),
+    (2, u'Alibaba询盘'),
+    (3, u'Alibaba RFQ'),
+    (4, u'客人联系我们'),
+    (5, u'网上发掘的客户信息'),
+    (6, u'展会联系'),
+    (7, u'其他渠道'),
+)
+
 class Client(models.Model):
     user = models.ForeignKey(User)
     cid = models.CharField(max_length=10, unique=True)
     company = models.CharField(max_length=200, unique=True)
     district = models.CharField(max_length=100)
+    source = models.IntegerField(choices=CLIENT_SOURCE, default=0)
     update_date = models.DateTimeField(auto_now=True)
     level = models.PositiveSmallIntegerField(choices=CLIENT_LEVEL, default=1)
 
 
     def __unicode__(self):
         return "%s - %s" % (self.cid, self.company)
+
+    def __str__(self):
+        return self.__unicode__()
 
     def addLog(self, request, log):
         self.clientlog_set.create(user=request.user, note=log)
@@ -64,6 +79,8 @@ class ClientLog(models.Model):
     def __unicode__(self):
         return u"%s:%s"%(self.created_date.date(), self.note)
 
+    def __str__(self):
+        return self.__unicode__()
     class Meta:
         ordering=['-created_date']
 

@@ -28,6 +28,7 @@
                 <th> CID </th>
                 <th> 客户 </th>
                 <th> 地区 </th>
+                <th> 渠道 </th>
                 <th> 等级 </th>
             </tr>
 
@@ -35,6 +36,7 @@
                 <td> {{  client.cid  }} </td>
                 <td> {{ client.company }}</td>
                 <td> {{  client.district }}</td>
+                <td> {{ client.get_source_display }}</td>
                 <td> {{ client.get_level_display }}</td>
             </tr>
         </table>
