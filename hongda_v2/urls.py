@@ -36,5 +36,4 @@ url(r'^edit_user/$', views.edit_user, name='edit_user'),
                   url(r'crm/', include('crm.urls')),
     url(r'erp/', include('erp.erp_urls')),
 url(r'erp_simple/', include('erp_simple.erp_urls')),
-
 ]+ static( settings.MEDIA_URL , document_root=settings.MEDIA_ROOT )
