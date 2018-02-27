@@ -132,7 +132,7 @@ class HouquanLiuchen(models.Model):
     is_delete = models.BooleanField(default=False, choices=IS_DELETE_CHOICE, verbose_name=u'已经删除')
 
     def __unicode__(self):
-        return self.id
+        return u"%s"%self.id
     def __str__(self):
         return self.__unicode__()
 
