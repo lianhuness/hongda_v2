@@ -1,4 +1,5 @@
 *.pyc
+/.idea/
 __pycache__
 db.sqlite3
 media
@@ -7,3 +8,5 @@ media
 
 backend/__pycache__/views.cpython-36.pyc
 
+.idea/workspace.xml
+*.pyc

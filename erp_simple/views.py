@@ -142,6 +142,7 @@ def houquan_add_liuchendan(request):
         form = HouquanLiuchenForm(request.POST)
         if form.is_valid():
             lcd = form.save()
+            messages.success(request, u'流程单成功建立:  %s'%lcd.id )
             return redirect(reverse('erp_houquan_list_liuchandan'))
     else:
         form = HouquanLiuchenForm()
@@ -156,6 +157,7 @@ def houquan_edit_liuchendan(request, id):
         form = HouquanLiuchenForm(request.POST)
         if form.is_valid():
             lcd = form.save()
+            messages.success(request,u'流程单修改成功:  %s' % lcd.id)
             return redirect(reverse('erp_houquan_view_liuchendan', kwargs={'id': lcd.id}))
     else:
         form = HouquanLiuchenForm(instance=lcd)

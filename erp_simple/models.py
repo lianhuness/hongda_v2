@@ -119,16 +119,17 @@ def get_next_day():
 class HouquanLiuchen(models.Model):
     user = models.ForeignKey(User)
     created_date = models.DateField(auto_now_add=True)
-    jihuadan = models.CharField(max_length=10, null=True, blank=True)
-    group = models.PositiveSmallIntegerField(choices=JIHUADAN_GROUP, default=1)
-    line = models.PositiveIntegerField()
-    worker = models.CharField(max_length=50)
-    color = models.CharField(max_length=10)
-    jihua_dapian = models.PositiveIntegerField(default=0)
-    shiji_dapian = models.PositiveIntegerField(default=0)
-    start_date = models.DateField(default=get_next_day)
+    shengchan_riqi = models.DateField(default=get_next_day, verbose_name=u'生产日期')
+    group = models.PositiveSmallIntegerField(choices=JIHUADAN_GROUP, default=1, verbose_name=u'分类')
+    line = models.PositiveIntegerField(verbose_name=u'制作线')
+    caozuogong = models.CharField(max_length=50, verbose_name=u'操作工')
+    fuzhugong = models.CharField(max_length=50, verbose_name=u'辅助工')
+    jihuadan = models.CharField(max_length=10, null=True, blank=True, verbose_name=u'订单号')
+    color = models.CharField(max_length=10, verbose_name=u'颜色')
+    jihua_dapian = models.PositiveIntegerField(default=0, verbose_name=u'计划大片数')
+    shiji_dapian = models.PositiveIntegerField(default=0, verbose_name=u'实际大片数')
 
-    is_delete = models.BooleanField(default=False, choices=IS_DELETE_CHOICE)
+    is_delete = models.BooleanField(default=False, choices=IS_DELETE_CHOICE, verbose_name=u'已经删除')
 
     def __unicode__(self):
         return self.id
@@ -142,18 +143,8 @@ class HouquanLiuchen(models.Model):
 class HouquanLiuchenForm(ModelForm):
     class Meta:
         model = HouquanLiuchen
-        fields=('user', 'jihuadan', 'group', 'line', 'worker', 'color', 'jihua_dapian', 'shiji_dapian', 'start_date', 'is_delete')
-        labels={
-            'jihuadan': u'计划单号',
-            'group': u'分类',
-            'line': u'几号线',
-            'worker': u'操作工',
-            'color': u'颜色',
-            'jihua_dapian': u'计划大片数',
-            'shiji_dapian': u'实际大片数',
-            'start_date': u'一线生产日期',
-            'is_delete': u'此流程单是否有效',
-        }
+        fields='__all__'
+
 
     def __init__(self, *args, **kwargs):
         super(HouquanLiuchenForm, self).__init__(*args, **kwargs)
