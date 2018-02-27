@@ -154,7 +154,7 @@ def houquan_add_liuchendan(request):
 def houquan_edit_liuchendan(request, id):
     lcd = get_object_or_404(HouquanLiuchen, pk=id)
     if request.method == 'POST':
-        form = HouquanLiuchenForm(request.POST)
+        form = HouquanLiuchenForm(request.POST, instance=lcd)
         if form.is_valid():
             lcd = form.save()
             messages.success(request,u'流程单修改成功:  %s' % lcd.id)
