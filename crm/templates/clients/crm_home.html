@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}
+CRM HOME
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    CRM - HOME
+</h1>
+
+    {% for sec in datas %}
+        <h2> {{ sec.title }} - {{ sec.data|length }}</h2>
+
+        <ul>
+        {% for data in sec.data %}
+
+            <li> <a href="{{data.url}}"> {{ data.display }}</a> </li>
+        {% endfor %}
+        </ul>
+    {% endfor %}
+{% endblock %}

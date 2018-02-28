@@ -213,7 +213,6 @@ def add_client_log(request, id):
 
 
 
-
 @permission_required('crm.add_order')
 def view_client_log(request,id):
     client = get_object_or_404(Client, pk=id)
@@ -225,4 +224,44 @@ def view_client_log(request,id):
     return render(request, 'clients/view_log.html', {'client': client, 'addLogForm': addLogForm})
 
 
+import datetime
+def crm_home(request):
+    today = datetime.date.today()
+
+    need_todo=[]
+    for c in request.user.client_set.all():
+        fl = c.clientlog_set.first()
+        if fl and fl.next_date and fl.next_date <= today:
+            need_todo.append(
+                {'display': "%s(%s): %s" % (fl.client, fl.next_date, fl.note),
+                 'id': fl.id,
+                 'url': reverse('view_client_log', kwargs={'id': fl.client.id})}
+            )
+
+
+
+    new_clients = []
+    for c in request.user.client_set.filter(created_date__date=today).all():
+        new_clients.append(
+            {'display': "%s"%(c),
+             'id': c.id,
+             'url': reverse('view_client', kwargs={'id': c.id})}
+        )
+
+
+    new_updates = []
+    for log in request.user.clientlog_set.filter(created_date__date=today).all():
+        new_updates.append(
+            {'display': "%s: %s"%(log.client, log.note),
+             'id': log.id,
+             'url': reverse('view_client_log', kwargs={'id': log.client.id })}
+        )
+
+    datas = [
+        {'title': u'今天需要处理的事情', 'data': need_todo},
+        {'title': u'今天添加的客人', 'data': new_clients},
+        {'title': u'今天添加的客户记录', 'data': new_updates},
+    ]
+
+    return render(request, 'clients/crm_home.html', {'datas': datas})
 

@@ -32,7 +32,7 @@ class Client(models.Model):
     source = models.IntegerField(choices=CLIENT_SOURCE, default=0)
     update_date = models.DateTimeField(auto_now=True)
     level = models.PositiveSmallIntegerField(choices=CLIENT_LEVEL, default=1)
-
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __unicode__(self):
         return "%s - %s" % (self.cid, self.company)

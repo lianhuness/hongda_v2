@@ -7,6 +7,8 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
+    url(r'^home$', views.crm_home, name='crm_home'),
+
     url(r'^clients/', include([
         url(r'^$', views.list_all_clients, name='list_all_clients'),
         url(r'^list_client/(?P<level>[0-9]+)$', views.list_clients, name='list_clients'),
