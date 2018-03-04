@@ -24,6 +24,14 @@ urlpatterns = [
 
     ]), name='clients'),
 
+    # url(r'^color/', include([
+    #     url(r'^$', views.list_colors, name='list_colors'),
+    #     url(r'^delete/(?P<id>[0-9]+)$', views.delete_color, name='delete_color'),
+    #     url(r'^add/(?P<id>[0-9]+)$', views.add_color, name='add_color'),
+    #     url(r'^edit/(?P<id>[0-9]+)$', views.edit_color, name='edit_color'),
+    # ]), name='colors'),
+
+
     url(r'^orders/', include([
         url(r'^$', views.list_orders, name='list_orders'),
         url(r'^view/(?P<id>[0-9]+)$', views.view_order, name='view_order'),
@@ -31,4 +39,7 @@ urlpatterns = [
         url(r'^add/(?P<id>[0-9]+)$', views.add_order, name='add_order'),
         url(r'^crm_search', views.crm_search, name='crm_search'),
     ]), name='orders'),
+
+
+
 ]

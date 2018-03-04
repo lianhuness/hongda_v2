@@ -42,8 +42,8 @@
                   {% if request.user.is_authenticated %}
                       <li><a href="{%  url 'items_list' %}">产品列表</a></li>
 
-{#                      {% if perms.auth.change_user %}#}
-                        {% if user.isManager %}
+                      {#                      {% if perms.auth.change_user %}#}
+                      {% if user.isManager %}
                           <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                   管理员
@@ -56,6 +56,19 @@
                               </ul>
                           </li>
                       {% endif %}
+
+
+                      <li class="dropdown">
+                          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                              考核分数
+                              <b class="caret"></b>
+                          </a>
+
+                          <ul class="dropdown-menu">
+                              <li><a href="{%  url 'list_rules' %}">所有考核标准 </a></li>
+                              <li><a href="{%  url 'list_weeks' %}">考核记录 </a></li>
+                          </ul>
+                      </li>
 
                       {% if user.isSales %}
                           <li class="dropdown">

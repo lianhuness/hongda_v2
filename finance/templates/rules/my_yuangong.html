@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+我的考核人员
+{% endblock %}
+
+{% block container %}
+
+<h1>
+   我的考核人员
+</h1>
+
+    <form action="{% url 'add_yuangong' %}" method="POST">
+        {%  csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input type="submit" name="continue_add " value="添加" />
+    </form>
+
+    <ul>
+        {% for yg in yuangong %}
+            <li>
+                {{ yg.yuangong }} - <a href="{% url 'del_yuangong' id=yg.id %}"> 删除 </a>
+            </li>
+        {% endfor %}
+
+    </ul>
+
+
+{% endblock %}

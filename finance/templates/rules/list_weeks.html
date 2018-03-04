@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}
+考核记录表
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    考核记录表
+</h1>
+
+    {% if perms.finance.add_rule %}
+    <form action="{% url 'add_week' %}" method="POST">
+        {%  csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input type="submit" name="continue_add " value="添加新的记录表" />
+    </form>
+    {% endif %}
+
+    <table class="table">
+        {% for week in weeks %}
+        <tr>
+            <td> <a href="{% url 'view_week' id=week.id %}"> {{ week }} </a></td>
+        </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

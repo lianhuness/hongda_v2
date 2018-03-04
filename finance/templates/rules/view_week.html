@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}
+考核 - {{ week }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    考核 - {{ week }}
+</h1>
+
+    {% if perms.finance.add_rule %}
+    <form action="{% url 'add_kaohe_record' id=week.id %}" method="POST" enctype="multipart/form-data">
+        {%  csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input type="submit" name="continue_add " value="添加新记录" />
+    </form>
+    {% endif %}
+
+    <table class="table">
+    {% for rec in week.kaoherecord_set.all %}
+        <tr>
+
+            <td> {{ rec.created_date }}
+                {% if perms.finance.add_rule %}
+                    <a href="{% url 'del_kaohe_record' id=rec.id %}"> 删除</a>
+                {% endif %}
+            </td>
+            <td> {{ rec.yuangong }}</td>
+            <td> {{ rec.rule }}</td>
+            <td> {{ rec.point }}</td>
+            <td>
+                {% if rec.image %}
+                <a href={{ rec.image.url }}> {{ rec.image.name }} </a>
+                {% else %}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+
+
+     <div class="row">
+        <h2> 按照员工扣分排行 </h2>
+        <table class="table">
+
+            {% for rec in order_by_score %}
+                <tr>
+                <td> {{ rec.yuangong__username }}</td>
+                <td> {{ rec.total_point }}</td>
+                 </tr>
+            {% endfor %}
+        </table>
+     </div>
+
+{% endblock %}

@@ -18,6 +18,7 @@
             <td>  <a href={% url 'view_client_log' id=client.id %}> 查看记录 </a> </td>
             <td> <a href={% url 'add_contactor' id=client.id %}> 添加联系人 </a> </td>
             <td> <a href={% url 'add_order' id=client.id %}> 添加新订单 </a> </td>
+{#            <td> <a href={% url 'add_color' id=client.id %}> 添加新颜色 </a> </td>#}
         </tr>
     </table>
 
@@ -58,7 +59,19 @@
         </table>
     </div>
 
+    {% if client.color_set.all|length > 0 %}
+        <div class="row">
+            <h2> 颜色 </h2>
+            <table class="table table-bordered">
+                {% for c in client.color_set.all %}
+                    <tr>
+                        <td> {{ c }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </div>
 
+    {% endif %}
 
     <div class="row">
         <h2> 订单 </h2>

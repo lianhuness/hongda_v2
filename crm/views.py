@@ -11,6 +11,48 @@ from .models import Client, Contactor, Order
 from .forms import ClientForm, ContactorForm, OrderForm
 from django import forms
 from django.contrib.auth.decorators import permission_required
+import datetime
+
+@permission_required('crm.add_order')
+def crm_home(request):
+    today = datetime.date.today()
+
+    need_todo=[]
+    for c in request.user.client_set.all():
+        fl = c.clientlog_set.first()
+        if fl and fl.next_date and fl.next_date <= today:
+            need_todo.append(
+                {'display': "%s(%s): %s" % (fl.client, fl.next_date, fl.note),
+                 'id': fl.id,
+                 'url': reverse('view_client_log', kwargs={'id': fl.client.id})}
+            )
+
+
+    new_clients = []
+    for c in request.user.client_set.filter(created_date__date=today).all():
+        new_clients.append(
+            {'display': "%s"%(c),
+             'id': c.id,
+             'url': reverse('view_client', kwargs={'id': c.id})}
+        )
+
+
+    new_updates = []
+    for log in request.user.clientlog_set.filter(created_date__date=today).all():
+        new_updates.append(
+            {'display': "%s: %s"%(log.client, log.note),
+             'id': log.id,
+             'url': reverse('view_client_log', kwargs={'id': log.client.id })}
+        )
+
+    datas = [
+        {'title': u'今天需要处理的事情', 'data': need_todo},
+        {'title': u'今天添加的客人', 'data': new_clients},
+        {'title': u'今天添加的客户记录', 'data': new_updates},
+    ]
+
+    return render(request, 'clients/crm_home.html', {'datas': datas})
+
 
 @permission_required('crm.add_order')
 def list_clients(request, level):
@@ -153,7 +195,7 @@ def view_order(request, id):
     return render(request, 'orders/view_order.html', {'order': order})
 
 
-from django import forms
+
 class SearchForm(forms.Form):
     type = forms.ChoiceField(choices=[('externalID', '合同外部跟踪号号'), ('internalID', '合同内部跟踪号号')])
     search_key = forms.CharField(max_length=50)
@@ -180,7 +222,7 @@ def crm_search(request):
     return render(request, 'orders/crm_search.html', {'form': form, 'orders': orders})
 
 
-from django import forms
+
 from .models import ClientLog
 
 class ClientLogForm(forms.ModelForm):
@@ -212,7 +254,6 @@ def add_client_log(request, id):
     return redirect(reverse('view_client_log', kwargs={'id': id}))
 
 
-
 @permission_required('crm.add_order')
 def view_client_log(request,id):
     client = get_object_or_404(Client, pk=id)
@@ -223,45 +264,44 @@ def view_client_log(request,id):
 
     return render(request, 'clients/view_log.html', {'client': client, 'addLogForm': addLogForm})
 
-
-import datetime
-def crm_home(request):
-    today = datetime.date.today()
-
-    need_todo=[]
-    for c in request.user.client_set.all():
-        fl = c.clientlog_set.first()
-        if fl and fl.next_date and fl.next_date <= today:
-            need_todo.append(
-                {'display': "%s(%s): %s" % (fl.client, fl.next_date, fl.note),
-                 'id': fl.id,
-                 'url': reverse('view_client_log', kwargs={'id': fl.client.id})}
-            )
-
-
-
-    new_clients = []
-    for c in request.user.client_set.filter(created_date__date=today).all():
-        new_clients.append(
-            {'display': "%s"%(c),
-             'id': c.id,
-             'url': reverse('view_client', kwargs={'id': c.id})}
-        )
-
-
-    new_updates = []
-    for log in request.user.clientlog_set.filter(created_date__date=today).all():
-        new_updates.append(
-            {'display': "%s: %s"%(log.client, log.note),
-             'id': log.id,
-             'url': reverse('view_client_log', kwargs={'id': log.client.id })}
-        )
-
-    datas = [
-        {'title': u'今天需要处理的事情', 'data': need_todo},
-        {'title': u'今天添加的客人', 'data': new_clients},
-        {'title': u'今天添加的客户记录', 'data': new_updates},
-    ]
-
-    return render(request, 'clients/crm_home.html', {'datas': datas})
+#
+# from .models import Color, ColorForm
+#
+# class ColorSearchForm(forms.Form):
+#     type = forms.ChoiceField(choices=[('user', u'用户'), ('client', u'客户'),('phantom', u'潘通')],label=u'Type')
+#     search_key = forms.CharField(max_length=50)
+#     from .models import COLOR_PRODUCT_TYPE_CHOICE
+#     producttype = forms.ChoiceField(choices = COLOR_PRODUCT_TYPE_CHOICE, required=False, label='产品类别')
+#
+# def list_colors(request):
+#     if request.method == 'POST':
+#         print("Hello")
+#     else:
+#         form = ColorSearchForm()
+#         colors = Color.objects.all()
+#
+#     return render(request, 'colors/list_colors.html', {'colors': colors, 'form': form})
+#
+# def add_color(request, id):
+#     client = get_object_or_404(Client, pk= id)
+#     if request.method == "POST":
+#         form = ColorForm(request.POST)
+#         if form.is_valid():
+#             c = form.save()
+#             c.client.addLog(request, u'添加新颜色：%s'% c )
+#             return redirect(reverse('list_colors'))
+#     else:
+#         form = ColorForm()
+#         form.fields['user'].initial =request.user
+#         form.fields['client'].initial = client
+#
+#     return render(request, 'colors/add_color.html', {'client': client, 'form': form})
+#
+# def edit_color(request, id):
+#     color = get_object_or_404(Color, pk=id)
+#     return render(request, 'colors/.html', {})
+#
+# def delete_color(request, id):
+#     color = get_object_or_404(Color, pk=id)
+#     return render(request, 'colors/.html', {})
 

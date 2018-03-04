@@ -144,7 +144,39 @@ def update_trueAmount(sender, instance, **kwargs):
 
 pre_save.connect(update_trueAmount, sender=Order)
 
-
+COLOR_PRODUCT_TYPE_CHOICE = (
+    (1, u'乳胶片'),
+    (2, u'乳胶薄圈'),
+    (3, u'乳胶厚圈'),
+    (4, u'单色乳胶管'),
+    (5, u'多色乳胶管'),
+    (20, u'其他')
+)
+# class Color(models.Model):
+#     user = models.ForeignKey(User)
+#     client = models.ForeignKey(Client, verbose_name=u'客户')
+#     producttype = models.SmallIntegerField(default=1,  verbose_name=u'产品分类', choices=COLOR_PRODUCT_TYPE_CHOICE)
+#     pantom = models.CharField(max_length=50, verbose_name=u'潘通色号')
+#     hongdacode = models.CharField(max_length=10, verbose_name=u'宏大色号',blank=True, null=True)
+#     created_date = models.DateTimeField(auto_now_add=True)
+#     updated_date = models.DateTimeField(auto_now_add=True)
+#
+#
+#     def __unicode__(self):
+#         return u'%s - %s - %s'%(self.id, self.get_producttype_display(), self.pantom)
+#
+#     def __str__(self):
+#         return self.__unicode__()
+#
+# from django import forms
+# class ColorForm(forms.ModelForm):
+#     class Meta:
+#         model = Color
+#         fields='__all__'
+#     def __init__(self, *args, **kwargs):
+#         super(ColorForm, self).__init__(*args, **kwargs)
+#         for i in ['user', 'client']:
+#             self.fields[i].widget = forms.HiddenInput()
 
 
 

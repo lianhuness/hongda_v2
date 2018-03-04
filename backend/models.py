@@ -8,6 +8,7 @@ def canViewOrder(self):
 def isManager(self):
     return self.has_perm('auth.change_user')
 
+
 def isSales(self):
     return self.isManager() or self.has_perm('crm.add_order')
 
@@ -18,3 +19,5 @@ User.add_to_class("canViewOrder",canViewOrder)
 User.add_to_class('isManager', isManager)
 
 User.add_to_class('isSales', isSales)
+
+

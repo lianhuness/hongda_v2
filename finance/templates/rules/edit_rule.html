@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}
+修改考核 -  {{ rule }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    修改考核 -  {{ rule }}
+</h1>
+
+            <form method="post" action="{% url 'edit_rule' id=rule.id  %}" >
+            {%  csrf_token %}
+            <table class="table">
+                {{ form.as_table }}
+
+            </table>
+        <input type="submit" name="continue_add " value="修改" />
+        </form>
+
+{% endblock %}

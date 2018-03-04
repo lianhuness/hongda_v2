@@ -34,4 +34,6 @@ urlpatterns = [
             url(r'^delete/(?P<id>[0-9]+)$', views.delete_subitemsupplier, name='delete_subitemsupplier'),
         ]), name='subitemsupplier'),
     ]), name='subitem'),
+
+
 ]

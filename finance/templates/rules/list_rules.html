@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+考核列表
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    考核列表
+</h1>
+    {% if perms.finance.add_rule %}
+        <ul>
+            <li> <a href={% url 'add_rule' %}> 添加新考核</a> </li>
+            <li> <a href="{% url 'my_yuangong' %}"> 我的考核人员 </a></li>
+        </ul>
+
+    {% endif %}
+    <table class="table">
+        {% for rule in rules %}
+            <tr>
+                <td> {{ rule }}
+                    {% if perms.finance.add_rule %}
+                        <a href="{% url 'edit_rule' id=rule.id %}"> Edit </a>
+                    {% endif %}
+                </td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

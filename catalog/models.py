@@ -2,7 +2,7 @@
 
 from django.db import models
 from django.contrib.auth.models import User
-
+from crm.models import Client
 # Create your models here.
 
 
@@ -70,3 +70,5 @@ class SubItemSupplier(models.Model):
 
     def _str__(self):
         return "%s" %(self.name)
+
+
