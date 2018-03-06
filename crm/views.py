@@ -15,44 +15,46 @@ import datetime
 
 @permission_required('crm.add_order')
 def crm_home(request):
+    outdate_logs = []
+
     today = datetime.date.today()
 
-    need_todo=[]
     for c in request.user.client_set.all():
         fl = c.clientlog_set.first()
         if fl and fl.next_date and fl.next_date <= today:
-            need_todo.append(
-                {'display': "%s(%s): %s" % (fl.client, fl.next_date, fl.note),
-                 'id': fl.id,
-                 'url': reverse('view_client_log', kwargs={'id': fl.client.id})}
-            )
+            outdate_logs.append(fl)
+            # need_todo.append(
+            #     {'display': "%s(%s): %s" % (fl.client, fl.next_date, fl.note),
+            #      'id': fl.id,
+            #      'url': reverse('view_client_log', kwargs={'id': fl.client.id})}
+            # )
 
 
-    new_clients = []
-    for c in request.user.client_set.filter(created_date__date=today).all():
-        new_clients.append(
-            {'display': "%s"%(c),
-             'id': c.id,
-             'url': reverse('view_client', kwargs={'id': c.id})}
-        )
+    return render(request, 'clients/crm_home.html', {'outdate_logs': outdate_logs})
 
 
-    new_updates = []
-    for log in request.user.clientlog_set.filter(created_date__date=today).all():
-        new_updates.append(
-            {'display': "%s: %s"%(log.client, log.note),
-             'id': log.id,
-             'url': reverse('view_client_log', kwargs={'id': log.client.id })}
-        )
+class DateForm(forms.Form):
+    date = forms.DateField(label = u'日期')
 
-    datas = [
-        {'title': u'今天需要处理的事情', 'data': need_todo},
-        {'title': u'今天添加的客人', 'data': new_clients},
-        {'title': u'今天添加的客户记录', 'data': new_updates},
-    ]
+@permission_required('crm.add_order')
+def daily_report(request):
+    date = datetime.date.today()
+    if request.method == 'POST':
+        form = DateForm(request.POST)
+        if form.is_valid():
+            date = form.cleaned_data['date']
+    else:
+        form = DateForm()
+        form.fields['date'].initial = date
 
-    return render(request, 'clients/crm_home.html', {'datas': datas})
+    new_clients = request.user.client_set.filter(created_date__date=date).all()
+    new_updates = request.user.clientlog_set.filter(created_date__date=date).all()
 
+    return render(request, 'clients/daily_report.html',
+                  {'date': date,
+                   'form': form,
+                   'new_clients': new_clients,
+                   'new_updates': new_updates})
 
 @permission_required('crm.add_order')
 def list_clients(request, level):

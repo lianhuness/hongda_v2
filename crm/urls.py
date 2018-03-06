@@ -8,6 +8,7 @@ from . import views
 
 urlpatterns = [
     url(r'^home$', views.crm_home, name='crm_home'),
+    url(r'^daily_report', views.daily_report, name='daily_report'),
 
     url(r'^clients/', include([
         url(r'^$', views.list_all_clients, name='list_all_clients'),

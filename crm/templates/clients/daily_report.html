@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}
+每天的记录
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    每天的记录 -- {{ date }}
+</h1>
+    <form action="{% url 'daily_report' %}" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+
+        <input type="submit" value="Search"/>
+    </form>
+
+    <div class="row">
+        <h2> 今日增加的客人-- {{ new_clients|length }}</h2>
+        <table class="table">
+            {% for c in new_clients %}
+                <tr>
+                    <td> <a href={% url 'view_client' id=c.id %}> {{ c }} </a> </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+
+    <div class="row">
+        <h2> 今日填写的客户记录 -- {{ new_updates|length }}</h2>
+        <table class="table">
+             {% for log in new_updates %}
+                <tr>
+                    <td> {{ log.created_date }}</td>
+                    <td> {{ log.client }}</td>
+                    <td> <a href="{% url 'view_client_log' id=log.client.id %}">
+                        {{ log.note }}
+                    </a>
+                    </td>
+                    <td> {% if log.file %}{{ log.file.name }}{% endif %}</td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+{% endblock %}

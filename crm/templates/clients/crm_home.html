@@ -9,14 +9,20 @@ CRM HOME
     CRM - HOME
 </h1>
 
-    {% for sec in datas %}
-        <h2> {{ sec.title }} - {{ sec.data|length }}</h2>
+    <div class="row">
+        <h2> 今日要处理的事情 -- {{ outdate_logs|length }} </h2>
 
-        <ul>
-        {% for data in sec.data %}
+        <table class="table">
+            {% for log in outdate_logs %}
+                <tr>
+                    <td> {{ log.client }}</td>
+                    <td> <a href="{% url 'view_client_log' id=log.client.id %}">
+                        {{ log.note }}
+                    </a></td>
+                    <td>  {% if log.file  %} {{ log.file.name }} {% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 
-            <li> <a href="{{data.url}}"> {{ data.display }}</a> </li>
-        {% endfor %}
-        </ul>
-    {% endfor %}
 {% endblock %}
