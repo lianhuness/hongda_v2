@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 from django.shortcuts import render, reverse, redirect, get_object_or_404, HttpResponse
 from .models import Rule, RuleForm
 # Create your views here.
