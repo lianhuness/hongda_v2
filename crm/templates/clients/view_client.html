@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block title %}
-<!-- 标题-->
+ 客户 - {{ client }}
 {% endblock %}
 
 {% block container %}
@@ -15,9 +15,11 @@
     <table class="table">
         <tr>
             <td> <a href={% url 'edit_client' id=client.id %}> 修改客户信息 </a> </td>
-            <td>  <a href={% url 'view_client_log' id=client.id %}> 查看记录 </a> </td>
             <td> <a href={% url 'add_contactor' id=client.id %}> 添加联系人 </a> </td>
+            <td> <a href={% url 'add_client_file' id=client.id %}> 添加客户文件 </a> </td>
+            <td>  <a href={% url 'view_client_log' id=client.id %}> 查看记录 </a> </td>
             <td> <a href={% url 'add_order' id=client.id %}> 添加新订单 </a> </td>
+
 {#            <td> <a href={% url 'add_color' id=client.id %}> 添加新颜色 </a> </td>#}
         </tr>
     </table>
@@ -45,8 +47,6 @@
 
     <div class="row">
         <h2> 联系人 </h2>
-
-
         <table class="table table-bordered">
             {% for contactor in client.contactor_set.all %}
                 <tr>
@@ -54,10 +54,33 @@
                     <td> {{ contactor.email }}</td>
                     <td> {{  contactor.tel }}</td>
                     <td> {{  contactor.address }}</td>
+                    <td>
+                        {% if contactor.namecard_front %}
+                            <img class='small-image' src="{{ contactor.namecard_front.url }}">
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
         </table>
     </div>
+
+
+    {% if client.clientfile_set.all|length > 0 %}
+        <div class="row">
+        <h2> 客户文件</h2>
+        <table class="table">
+            {% for cf in client.clientfile_set.all %}
+                <tr>
+                    <td> {{ cf.user }}</td>
+                    <td> {{ cf.created_date }}</td>
+                    <td> {{ cf.description }}</td>
+                    <td> <a href="{{ cf.file.url }}"> {{ cf.file.name }}</a> </td>
+                    <td> <a href="{% url 'del_client_file' id=cf.id %}"> 删除文件 </a></td>
+                </tr>
+            {% endfor %}
+        </table>
+        </div>
+    {% endif %}
 
     {% if client.color_set.all|length > 0 %}
         <div class="row">

@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block title %}
-<!-- 标题-->
+
+    我的客户列表
+
 {% endblock %}
 
 {% block container %}
@@ -9,41 +11,48 @@
     我的客户列表 - 共 {{ clients|length }}个
 </h1>
 
+    <form action="{% url 'list_all_clients' %}"  method="post">
+        {% csrf_token %}
+       {{ form }}
+<input type="submit" value="搜索" />
+    </form>
+
+
     <a href={% url 'add_client'  %}> 添加新客户 </a>
 
-        <table class="table table-bordered">
-            <tr>
-                {% if level == 0 %}
-                    <td> <mark> 所有的客人 </mark></td>
-                {% else %}
-                    <td> <a href="{% url 'list_all_clients' %}"> 所有的客人</a></td>
-                {% endif %}
-
-                {% if level == 1 %}
-                    <td> <mark> 潜在的客人 </mark></td>
-                {% else %}
-                    <td> <a href="{% url 'list_clients' level=1 %}"> 潜在的客人</a></td>
-                {% endif %}
-
-                {% if level == 2 %}
-                    <td> <mark> 进展中的客人 </mark></td>
-                {% else %}
-                    <td> <a href="{% url 'list_clients' level=2 %}"> 进展中的客人</a></td>
-                {% endif %}
-
-                {% if level == 3 %}
-                    <td> <mark> 重要的客人 </mark></td>
-                {% else %}
-                    <td> <a href="{% url 'list_clients' level=3 %}"> 重要的客人</a></td>
-                {% endif %}
-
-                {% if level == 4 %}
-                    <td> <mark> 有问题的客人 </mark></td>
-                {% else %}
-                    <td> <a href="{% url 'list_clients' level=4 %}"> 有问题的客人</a></td>
-                {% endif %}
-            </tr>
-        </table>
+{#        <table class="table table-bordered">#}
+{#            <tr>#}
+{#                {% if level == 0 %}#}
+{#                    <td> <mark> 所有的客人 </mark></td>#}
+{#                {% else %}#}
+{#                    <td> <a href="{% url 'list_all_clients' %}"> 所有的客人</a></td>#}
+{#                {% endif %}#}
+{##}
+{#                {% if level == 1 %}#}
+{#                    <td> <mark> 潜在的客人 </mark></td>#}
+{#                {% else %}#}
+{#                    <td> <a href="{% url 'list_clients' level=1 %}"> 潜在的客人</a></td>#}
+{#                {% endif %}#}
+{##}
+{#                {% if level == 2 %}#}
+{#                    <td> <mark> 进展中的客人 </mark></td>#}
+{#                {% else %}#}
+{#                    <td> <a href="{% url 'list_clients' level=2 %}"> 进展中的客人</a></td>#}
+{#                {% endif %}#}
+{##}
+{#                {% if level == 3 %}#}
+{#                    <td> <mark> 重要的客人 </mark></td>#}
+{#                {% else %}#}
+{#                    <td> <a href="{% url 'list_clients' level=3 %}"> 重要的客人</a></td>#}
+{#                {% endif %}#}
+{##}
+{#                {% if level == 4 %}#}
+{#                    <td> <mark> 有问题的客人 </mark></td>#}
+{#                {% else %}#}
+{#                    <td> <a href="{% url 'list_clients' level=4 %}"> 有问题的客人</a></td>#}
+{#                {% endif %}#}
+{#            </tr>#}
+{#        </table>#}
 
 
     <div class="row">

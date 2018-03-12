@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from .models import Client, Contactor, Order
-from .forms import ClientForm, ContactorForm, OrderForm
+from .forms import ClientForm, OrderForm
 from django import forms
 from django.contrib.auth.decorators import permission_required
 import datetime
@@ -56,15 +56,52 @@ def daily_report(request):
                    'new_clients': new_clients,
                    'new_updates': new_updates})
 
-@permission_required('crm.add_order')
-def list_clients(request, level):
-    clients = request.user.client_set.filter(level=level).all()
-    return render(request, 'clients/list_clients.html', {'clients': clients, 'level':level})
+
+from .models import CLIENT_SOURCE, CLIENT_LEVEL
+class Listclient_form(forms.Form):
+    source = forms.ChoiceField(label=u'客户来源')
+    level = forms.ChoiceField(label = u'客户等级')
+    name = forms.CharField(label=u'客户', max_length=50, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(Listclient_form, self).__init__(*args, **kwargs)
+        clientchoice = [(-1, 'ALL')]
+        clientchoice.extend(CLIENT_SOURCE)
+        levelchoice = [(-1, 'ALL')]
+        levelchoice.extend(CLIENT_LEVEL)
+        self.fields['source'].choices = clientchoice
+        self.fields['source'].initial =clientchoice[0]
+        self.fields['level'].choices = levelchoice
+        self.fields['level'].initial = levelchoice[0]
 
 @permission_required('crm.add_order')
 def list_all_clients(request):
     clients = request.user.client_set.all()
-    return render(request, 'clients/list_clients.html', {'clients': clients, 'level':0})
+    if request.method == 'POST':
+        form = Listclient_form(request.POST)
+        if form.is_valid():
+            source = int(form.cleaned_data['source'])
+            level = int(form.cleaned_data['level'])
+            name = form.cleaned_data['name']
+            if source>= 0:
+                clients = clients.filter(source=source).all()
+            if level >=0:
+                clients = clients.filter(level = level).all()
+            if form.cleaned_data['name']:
+                clients = clients.filter(company__contains=name).all()
+    else:
+        form = Listclient_form()
+    return render(request, 'clients/list_clients.html', {'clients': clients, 'form': form, 'level':0})
+
+
+class ContactorForm(forms.ModelForm):
+    class Meta:
+        model = Contactor
+        fields = "__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ContactorForm, self).__init__(*args, **kwargs)
+        self.fields['client'].widget = forms.HiddenInput()
 
 @permission_required('crm.add_order')
 def add_client(request):
@@ -74,13 +111,11 @@ def add_client(request):
             client = form.save(commit=False)
             client.cid = "C-%s"%Client.objects.count()
             client.save()
-            messages.success(request, '客户信息添加成功!')
-            client.addLog(request, u'添加信息')
+            client.addLog(request, u'添加客户- %s '%client)
             return redirect(reverse('add_contactor', kwargs={'id': client.id}))
     else:
         form = ClientForm()
         form.fields['user'].initial = request.user
-
     return render(request, 'clients/add_client.html', {'form': form})
 
 @permission_required('crm.add_order')
@@ -90,8 +125,7 @@ def edit_client(request, id):
         form = ClientForm(request.POST, instance=client)
         if form.is_valid():
             client = form.save()
-            client.addLog(request, u'修改客人信息')
-            messages.success(request, '客户信息修改成功!')
+            client.addLog(request, u'修改客户 - %s'%client)
             return redirect(reverse('view_client', kwargs={'id': client.id}))
     else:
         form = ClientForm(instance=client)
@@ -114,10 +148,10 @@ def add_contactor(request, id):
         return HttpResponse("No Permission")
 
     if request.method == 'POST':
-        form = ContactorForm(request.POST)
+        form = ContactorForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
-            messages.success(request, '客户联系人添加成功!')
+            contactor = form.save()
+            client.addLog(request, u'添加联系人： %s'%contactor)
             return redirect(reverse('view_client', kwargs={'id': client.id}))
     else:
         form = ContactorForm()
@@ -129,10 +163,10 @@ def edit_contactor(request, id):
     contactor = get_object_or_404(Contactor, pk=id)
 
     if request.method == 'POST':
-        form = ContactorForm(request.POST, instance=contactor)
+        form = ContactorForm(request.POST, request.FILES, instance=contactor)
         if form.is_valid():
-            form.save()
-            messages.success(request, '客户联系人跟新成功!')
+            contactor = form.save()
+            contactor.client.addLog(request, u'修改联系人： %s'%contactor)
             return redirect(reverse('view_client', kwargs={'id': contactor.client.id}))
     else:
         form = ContactorForm(instance=contactor)
@@ -265,6 +299,42 @@ def view_client_log(request,id):
     addLogForm.fields['client'].initial = client
 
     return render(request, 'clients/view_log.html', {'client': client, 'addLogForm': addLogForm})
+
+from .models import ClientFile
+
+class ClientFileForm(forms.ModelForm):
+    class Meta:
+        model = ClientFile
+        fields="__all__"
+
+    def __init__(self, *args, **kwargs):
+        super(ClientFileForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = forms.HiddenInput()
+        self.fields['client'].widget = forms.HiddenInput()
+
+@permission_required('crm.add_order')
+def add_client_file(request, id):
+    client = get_object_or_404(Client, pk=id)
+    if request.method == 'POST':
+        form = ClientFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            cf = form.save()
+            client.addLog(request, "%s , 添加文件 - %s"%(request.user, cf))
+            return redirect(reverse("view_client", kwargs={'id': cf.client.id}))
+    else:
+        form = ClientFileForm()
+        form.fields['user'].initial = request.user
+        form.fields['client'].initial = client
+
+    return render(request, 'clients/add_file.html', {'client': client, 'form': form})
+
+def del_client_file(request, id):
+    cf = get_object_or_404(ClientFile, pk=id)
+    cf.delete()
+    cf.client.addLog(request, u'%s, 删除文件-%s'%(request.user, cf))
+    return redirect(reverse("view_client", kwargs={'id':cf.client.id}))
+
+
 
 #
 # from .models import Color, ColorForm

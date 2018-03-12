@@ -18,20 +18,7 @@ class ClientForm(forms.ModelForm):
         super(ClientForm, self).__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()
 
-class ContactorForm(forms.ModelForm):
-    class Meta:
-        model = Contactor
-        fields = ('client', 'name', 'email', 'tel', 'address')
-        labels = {
-            'name': '姓名',
-            'email': 'Email',
-            'tel': '电话',
-            'address': '地址'
-        }
 
-    def __init__(self, *args, **kwargs):
-        super(ContactorForm, self).__init__(*args, **kwargs)
-        self.fields['client'].widget = forms.HiddenInput()
 
 
 class OrderForm(forms.ModelForm):

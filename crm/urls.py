@@ -12,11 +12,14 @@ urlpatterns = [
 
     url(r'^clients/', include([
         url(r'^$', views.list_all_clients, name='list_all_clients'),
-        url(r'^list_client/(?P<level>[0-9]+)$', views.list_clients, name='list_clients'),
+        # url(r'^list_client/(?P<level>[0-9]+)$', views.list_clients, name='list_clients'),
         url(r'^view/(?P<id>[0-9]+)$', views.view_client, name='view_client'),
         url(r'^viewlog/(?P<id>[0-9]+)$', views.view_client_log, name='view_client_log'),
         url(r'^edit/(?P<id>[0-9]+)$', views.edit_client, name='edit_client'),
         url(r'^add$', views.add_client, name='add_client'),
+        url(r'^addfile/(?P<id>[0-9]+)$', views.add_client_file, name='add_client_file'),
+        url(r'^deleteclientfile/(?P<id>[0-9]+)$', views.del_client_file, name='del_client_file'),
+
 
         url(r'^addcontactor/(?P<id>[0-9]+)$', views.add_contactor, name='add_contactor'),
         url(r'^editcontactor/(?P<id>[0-9]+)$', views.edit_contactor, name='edit_contactor'),

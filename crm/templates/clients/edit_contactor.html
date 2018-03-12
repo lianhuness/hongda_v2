@@ -9,7 +9,7 @@
     客户: {{ client }} - 修改联系人
 </h1>
 
-    <form action="{% url 'edit_contactor' id=contactor.id %}" method="post">
+    <form action="{% url 'edit_contactor' id=contactor.id %}" method="post"  enctype="multipart/form-data">
         {% csrf_token %}
         <table>
             {{ form.as_table }}
