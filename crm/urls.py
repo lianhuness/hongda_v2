@@ -20,12 +20,11 @@ urlpatterns = [
         url(r'^addfile/(?P<id>[0-9]+)$', views.add_client_file, name='add_client_file'),
         url(r'^deleteclientfile/(?P<id>[0-9]+)$', views.del_client_file, name='del_client_file'),
 
-
         url(r'^addcontactor/(?P<id>[0-9]+)$', views.add_contactor, name='add_contactor'),
         url(r'^editcontactor/(?P<id>[0-9]+)$', views.edit_contactor, name='edit_contactor'),
 
         url(r'addnote/(?P<id>[0-9]+)$', views.add_client_log, name='add_client_log'),
-
+        url(r'changeuser/(?P<id>[0-9]+)$', views.change_client_rep, name='change_client_rep'),
     ]), name='clients'),
 
     # url(r'^color/', include([

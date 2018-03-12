@@ -93,6 +93,28 @@ def list_all_clients(request):
         form = Listclient_form()
     return render(request, 'clients/list_clients.html', {'clients': clients, 'form': form, 'level':0})
 
+from django.contrib.auth.models import User, Permission
+
+class ChangeClientRepForm(forms.Form):
+    p = Permission.objects.filter(codename='add_order')
+    user = forms.ModelChoiceField(queryset=User.objects.filter(user_permissions=p).all())
+
+@permission_required('crm.add_order')
+def change_client_rep(request, id):
+    client = get_object_or_404(Client, pk=id)
+    if request.method == 'POST':
+        form = ChangeClientRepForm(request.POST)
+        if form.is_valid():
+            user = form.cleaned_data['user']
+            preuser = client.user
+            client.user = user
+            client.save()
+            client.addLog(request, u'销售代表 %s -> %s'%(preuser, user) )
+            return redirect(reverse('list_all_clients'))
+    else:
+        return HttpResponse("Something is wrong. ")
+
+
 
 class ContactorForm(forms.ModelForm):
     class Meta:
@@ -135,8 +157,9 @@ def edit_client(request, id):
 @permission_required('crm.add_order')
 def view_client(request, id):
     client = get_object_or_404(Client, pk=id)
+    changeuserform = ChangeClientRepForm()
     if client.user == request.user or request.user.canViewOrder:
-        return render(request, 'clients/view_client.html', {'client': client})
+        return render(request, 'clients/view_client.html', {'client': client, 'changeuserform': changeuserform})
     else:
         return HttpResponse(u'没有权限， 联系管理员')
 

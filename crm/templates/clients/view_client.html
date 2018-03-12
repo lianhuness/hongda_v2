@@ -19,11 +19,16 @@
             <td> <a href={% url 'add_client_file' id=client.id %}> 添加客户文件 </a> </td>
             <td>  <a href={% url 'view_client_log' id=client.id %}> 查看记录 </a> </td>
             <td> <a href={% url 'add_order' id=client.id %}> 添加新订单 </a> </td>
-
-{#            <td> <a href={% url 'add_color' id=client.id %}> 添加新颜色 </a> </td>#}
         </tr>
     </table>
 
+    <div class="row">
+        <form action="{% url 'change_client_rep' id=client.id %}" method="post">
+            {% csrf_token %}
+            {{ changeuserform }}
+            <input type="submit" value="更改"/>
+        </form>
+    </div>
 
     <div class="row">
         <table class="table table-bordered">

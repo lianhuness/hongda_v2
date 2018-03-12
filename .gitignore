@@ -1,4 +1,5 @@
 *.pyc
+crm/migrations
 /.idea/
 __pycache__
 db.sqlite3
@@ -10,20 +11,3 @@ backend/__pycache__/views.cpython-36.pyc
 
 .idea/workspace.xml
 *.pyc
-catalog/__pycache__/models.cpython-36.pyc
-catalog/__pycache__/urls.cpython-36.pyc
-catalog/__pycache__/models.cpython-36.pyc
-crm/migrations/0015_auto_20180304_2306.py
-finance/migrations/0003_auto_20180305_0002.py
-finance/migrations/0002_auto_20180304_2334.py
-finance/migrations/0004_auto_20180305_0024.py
-crm/migrations/0014_color.py
-catalog/__pycache__/urls.cpython-36.pyc
-catalog/__pycache__/models.cpython-36.pyc
-catalog/__pycache__/models.cpython-36.pyc
-catalog/__pycache__/models.cpython-36.pyc
-catalog/__pycache__/urls.cpython-36.pyc
-finance/migrations/0005_kaoherecord_created_date.py
-hongda_v2/__pycache__/settings.cpython-36.pyc
-catalog/__pycache__/urls.cpython-36.pyc
-catalog/__pycache__/models.cpython-36.pyc
