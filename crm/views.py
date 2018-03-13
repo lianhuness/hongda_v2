@@ -342,7 +342,7 @@ def add_client_file(request, id):
         form = ClientFileForm(request.POST, request.FILES)
         if form.is_valid():
             cf = form.save()
-            client.addLog(request, "%s , 添加文件 - %s"%(request.user, cf))
+            client.addLog(request, u'%s , 添加文件 - %s'%(request.user, cf))
             return redirect(reverse("view_client", kwargs={'id': cf.client.id}))
     else:
         form = ClientFileForm()
