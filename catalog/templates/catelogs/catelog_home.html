@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}
+    产品目录首页
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    产品目录首页 - {{ products|length }}
+</h1>
+    <a href="{% url 'add_product' %}"> 添加新产品 </a>
+    <a href="{% url 'catelog_home' %}"> 显示所有 </a>
+
+    <form action="{% url 'catelog_home' %}" method="post">
+        {% csrf_token %}
+        <table class="table">
+            {{ form.as_table }}
+        </table>
+        <input type="submit" value="搜索"/>
+
+    </form>
+
+    <table class="table">
+        <tr>
+            <th> 产品名称 </th>
+            <th> 产品分类</th>
+            <th> 成本价格</th>
+            <th> 销售价格 </th>
+            <th> 材料 </th>
+            <th> 重量 </th>
+            <th> 尺寸 </th>
+        </tr>
+        {% for p in products %}
+            <tr>
+                <td> <a href="{% url 'view_product' id=p.id %}"> {{ p.id }} -{{ p.name }} </a></td>
+                <td> {{ p.catelog }}</td>
+                 <td> {{ p.costprice }}RMB</td>
+                <td> {{  p.suggestprice }} RMB </td>
+                <td> {{ p.material }}</td>
+                <td> {{  p.weight }}g</td>
+                <td> {{ p.size }}</td>
+
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

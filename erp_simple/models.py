@@ -20,6 +20,9 @@ class Jhd(models.Model):
     is_delete = models.BooleanField(default=False)
     is_complete = models.BooleanField(default=False)
 
+    class Meta:
+        ordering=['-updated_date']
+
     def __unicode__(self):
         return str(self.id)
     def __str__(self):
@@ -39,6 +42,8 @@ class Jhd(models.Model):
 
     def lastUpdate(self):
         return self.jhd_log_set.first()
+
+
 
 from django.forms import ModelForm
 from django import forms

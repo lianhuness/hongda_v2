@@ -9,6 +9,13 @@
     查看订单 <mark> {{ order }} </mark> - {{ order.created_date|date:"Y/m/d" }}
 </h1>
 
+    <table class="table">
+        <tr>
+            <td> <a href={% url 'erp_add_jihuadan' id=order.id %}> 添加生产计划单 </a></td>
+            <td> <a href={% url 'add_order_expense' id=order.id %}> 添加订单费用 </a> </td>
+        </tr>
+    </table>
+
     <div class="row">
         <table class="table table-striped">
             <tr>
@@ -17,7 +24,7 @@
                 <th> 销售员</th>
                 <th> 创立日期</th>
                 <th> 状态 </th>
-                {% if request.user == order.user %}
+                {% if request.user == order.user or request.user.canViewOrder %}
                     <th> 客户 </th>
                     <th> 联系人 </th>
                     <th> 金额 </th>
@@ -30,7 +37,7 @@
                 <th> {{ order.user }}</th>
                 <th> {{ order.created_date|date:'Y/m/d' }}</th>
                 <th> {{ order.get_status_display }} </th>
-                {% if request.user == order.user %}
+                {% if request.user == order.user or request.user.canViewOrder %}
                     <th> {{ order.client }} </th>
                     <th> {{ order.contactor }}</th>
                     <th> {{ order.amount }}{{ order.currency }} </th>
@@ -43,7 +50,7 @@
 
 
     <h2> 生产计划单 </h2>
-     <a href={% url 'erp_add_jihuadan' id=order.id %}> 添加生产计划单 </a>
+
         <table class="table">
             {% for jhd in order.jhd_set.all %}
             <tr>
@@ -54,26 +61,24 @@
             </tr>
             {% endfor %}
         </table>
-{#    <h2> 生产计划单 </h2>#}
-{#     <a href={% url 'add_jihuadan' id=order.id %}> 添加生产计划单 </a>#}
-{#        <table class="table">#}
-{#            {% for jhd in order.jihuadan_set.all %}#}
-{#            <tr>#}
-{#                <td> <a href={% url "view_jihuadan" id=jhd.id %}> {{ jhd }}  </a></td>#}
-{#                <td> {{ jhd.status }}</td>#}
-{#                <td> {{ jhd.created_date }}</td>#}
-{#                <td> {{ jhd.deliver_date }}</td>#}
-{#                <td> {{ jhd.item_set.all|length }}</td>#}
-{#                <td>#}
-{#                    查看#}
-{#                </td>#}
-{#            </tr>#}
-{#            {% endfor %}#}
-{#        </table>#}
-    <h2> 收款记录</h2>
 
-    <h2> 发货记录 </h2>
 
-    <h2> 开票记录 </h2>
+    <h2> 费用登记 - {{ order.totalExpense }} </h2>
+    <table class="table">
+        {% for exp in order.orderexpense_set.all %}
+            <tr>
+                <td> {{ exp.created_date }}</td>
+                <td> {{ exp.get_type_display }}</td>
+                <td> {{ exp.amount }}</td>
+                <td> {% if exp.note %}{{ exp.note }} {% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{##}
+{#    <h2> 收款记录</h2>#}
+{##}
+{#    <h2> 发货记录 </h2>#}
+{##}
+{#    <h2> 开票记录 </h2>#}
 
 {% endblock %}

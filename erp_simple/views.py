@@ -127,6 +127,10 @@ def search_jhd(request):
     return render(request, 'jhd/search_jhd.html', {'form': form, 'jhds': jhds})
 
 
+def list_all_jhd(request):
+    jhds = Jhd.objects.all()
+    return render(request, 'jhd/list_all_jhd.html', { 'jhds': jhds})
+
 from .models import HouquanLiuchen, HouquanLiuchenForm
 def houquan_list_liuchandan(request):
     lcds = HouquanLiuchen.objects.all()

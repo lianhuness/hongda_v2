@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}
+<!-- 标题-->
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    计划单列表
+</h1>
+    <table class="table table-striped table-bordered">
+    <tr>
+        <th> 状态</th>
+        <th> 合同号-计划单号</th>
+        <th> 建立日期</th>
+        <th> 销售员</th>
+        <th> 文件 </th>
+    </tr>
+
+    {% for jhd in jhds %}
+        <tr>
+            <td> {{ jhd.status }}</td>
+            <td> <a href="{% url 'erp_view_jihuadan' id=jhd.id %}"> {{ jhd.order }} - {{ jhd.id }} </a></td>
+            <td> {{ jhd.created_date }} </td>
+            <td> {{ jhd.user }}</td>
+            <td> <a href={{ jhd.file.url }}> 文件 </a> </td>
+        </tr>
+    {% endfor %}
+
+    </table>
+{% endblock %}

@@ -40,7 +40,7 @@
 
               <ul class="nav navbar-nav">
                   {% if request.user.is_authenticated %}
-                      <li><a href="{%  url 'items_list' %}">产品列表</a></li>
+                      <li><a href="{%  url 'catelog_home' %}">产品列表</a></li>
 
                       {#                      {% if perms.auth.change_user %}#}
                       {% if user.isManager %}
@@ -70,7 +70,7 @@
                           </ul>
                       </li>
 
-                      {% if user.isSales %}
+                      {% if user.isSales or user.isSalesManager %}
                           <li class="dropdown">
                               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                   CRM
@@ -78,12 +78,18 @@
                               </a>
 
                               <ul class="dropdown-menu">
-                                  <li><a href="{%  url 'crm_home' %}">今天要处理的事情</a></li>
-                                  <li><a href="{%  url 'list_all_clients' %}">客户列表</a></li>
-                                  <li><a href="{%  url 'list_orders' %}">我的合同</a></li>
-                                  <li><a href="{%  url 'erp_my_jihuadan' show='PENDING'%}">我的计划单</a></li>
+                                  {% if user.isSales %}
+                                      <li><a href="{%  url 'crm_home' %}">今天要处理的事情</a></li>
+                                      <li><a href="{%  url 'list_all_clients' %}">客户列表</a></li>
+                                      <li><a href="{%  url 'list_orders' %}">我的合同</a></li>
+                                      <li><a href="{%  url 'erp_my_jihuadan' show='PENDING'%}">我的计划单</a></li>
+                                      <li><a href="{%  url 'daily_report' %}">历史记录</a></li>
+                                  {% endif %}
                                   <li><a href="{% url 'crm_search' %}"> 搜索合同 </a></li>
-                                  <li><a href="{%  url 'daily_report' %}">历史记录</a></li>
+
+                                  {% if user.isSalesManager %}
+                                        <li><a href="{%  url 'expense_list' %}">费用记录表</a></li>
+                                  {% endif %}
 {#                                  <li><a href="#">Jasper Report</a></li>#}
 {#                                  <li class="divider"></li>#}
 {#                                  <li><a href="#">分离的链接</a></li>#}
@@ -101,8 +107,9 @@
                           </a>
 
                           <ul class="dropdown-menu">
-                              <li> <a href={% url 'erp_houquan_list_liuchandan' %}> 厚圈的流程单列表 </a></li>
-                              <li> <a href={% url 'erp_houquan_add_liuchendan' %}> 添加厚圈流程单 </a></li>
+{#                              <li> <a href={% url 'erp_houquan_list_liuchandan' %}> 厚圈的流程单列表 </a></li>#}
+{#                              <li> <a href={% url 'erp_houquan_add_liuchendan' %}> 添加厚圈流程单 </a></li>#}
+                              <li><a href="{%  url 'list_all_jhd' %}">计划单列表</a></li>
                               <li><a href="{%  url 'erp_search_jhd' %}">计划单搜索</a></li>
 
 {#                              <li><a href="{%  url 'subproducts' %}">我关注物料种类</a></li>#}

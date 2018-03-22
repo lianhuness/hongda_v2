@@ -41,6 +41,10 @@ urlpatterns = [
         url(r'^edit/(?P<id>[0-9]+)$', views.edit_order, name='edit_order'),
         url(r'^add/(?P<id>[0-9]+)$', views.add_order, name='add_order'),
         url(r'^crm_search', views.crm_search, name='crm_search'),
+
+        url(r'^add_expense/(?P<id>[0-9]+)$', views.add_order_expense, name='add_order_expense'),
+        url(r'^expense_list$', views.expense_list, name='expense_list'),
+url(r'^del_expense/(?P<id>[0-9]+)$', views.del_expense, name='del_expense'),
     ]), name='orders'),
 
 

@@ -245,13 +245,15 @@ def edit_order(request, id):
 
     return render(request, 'orders/edit_order.html', {'order': order, 'form': form})
 
-@permission_required('crm.add_order')
+
 def view_order(request, id):
+
     order = get_object_or_404(Order, pk=id)
     if order.user != request.user and request.user.canViewOrder() == False:
         return HttpResponse("No Permission")
 
     return render(request, 'orders/view_order.html', {'order': order})
+
 
 
 
@@ -265,8 +267,11 @@ class SearchForm(forms.Form):
     #             return self.cleaned_data['search_key']
     #         raise forms.ValidationError("合同不存在")
 
-@permission_required('crm.add_order')
+
 def crm_search(request):
+    if request.user.isSales is False and request.user.isSalesManager is False:
+        return HttpResponse("No Permission")
+
     orders = []
     if request.method == 'POST':
         form = SearchForm(request.POST)
@@ -358,7 +363,43 @@ def del_client_file(request, id):
     return redirect(reverse("view_client", kwargs={'id':cf.client.id}))
 
 
+from .models import OrderExpense
+class OrderExpenseForm(forms.ModelForm):
+    class Meta:
+        model = OrderExpense
+        fields = "__all__"
+    def __init__(self, *args, **kwargs):
+        super(OrderExpenseForm, self).__init__(*args, **kwargs)
+        self.fields['user'].widget = forms.HiddenInput()
+        self.fields['order'].widget = forms.HiddenInput()
 
+@permission_required('crm.add_orderexpense')
+def add_order_expense(request, id):
+    order = get_object_or_404(Order, pk=id)
+
+    if request.method == "POST":
+        form = OrderExpenseForm(request.POST)
+        if form.is_valid():
+            expense = form.save()
+            messages.success(request, 'Add Expense success. ')
+            return redirect(reverse('view_order', kwargs={'id': id}))
+    else:
+        form = OrderExpenseForm()
+        form.fields['user'].initial = request.user
+        form.fields['order'].initial = order
+    return render(request, 'orders/add_expense.html', {'order': order, 'form': form})
+
+@permission_required('crm.add_orderexpense')
+def expense_list(request):
+    expenses = OrderExpense.objects.all()
+    return render(request, 'orders/expense_list.html', {'expenses': expenses})
+
+@permission_required('crm.add_orderexpense')
+def del_expense(request, id):
+    exp = get_object_or_404(OrderExpense, pk=id)
+    exp.delete()
+    messages.success(request, 'Expense deleted. ')
+    return redirect(reverse('expense_list'))
 #
 # from .models import Color, ColorForm
 #

@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}
+{{ catelog }}
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    {{ catelog }} -- <a href="{% url 'edit_catelog' id=catelog.id %}"> 修改</a>
+</h1>
+    <table class="table">
+        <tr>
+            <td> <a href="{% url 'add_product' id=catelog.id %}"> 添加新产品 </a> </td>
+        </tr>
+    </table>
+
+    <div class="row">
+        <h2> 基本信息</h2>
+        <ul>
+            <li> 说明: {{ catelog.description|linebreaks }}</li>
+            <li> 图片： {% if catelog.image %} <img src="{{  catelog.image.url }}" class="small-image"/> {% endif %}</li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <h2> 产品别表 - {{ catelog.product_set.all|length }}</h2>
+    <table class="table">
+        {% for product in catelog.product_set.all %}
+            <tr>
+                <td>  {% if product.frontimage %} <img src="{{ product.frontimage.url }}" class="small-image"/> {% endif %} </td>
+                <td>
+                    {% if product.sideimage %}
+                        <img src="{{product.sideimage.url }}" class="small-image"/>
+                    {% endif %}
+                </td>
+                <td> <a href="{% url 'view_product' id=product.id %}"> {{ product }}</a></td>
+                <td> {{ product.material }}</td>
+                <td> {{ product.size }}</td>
+                <td> {{ product.weight }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    </div>
+
+{% endblock %}

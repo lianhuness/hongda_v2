@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}
+费用列表
+{% endblock %}
+
+{% block container %}
+
+<h1>
+    费用列表
+</h1>
+
+    <table class="table">
+        <tr>
+            <th> 建立时间</th>
+            <th> 合同号 </th>
+            <th> 类别</th>
+            <th> 金额</th>
+            <th> 备注 </th>
+            <th> 操作 </th>
+        </tr>
+
+        {% for exp in expenses %}
+            <tr>
+                <td> {{ exp.created_date }}</td>
+                <td> <a href="{% url 'view_order' id=exp.order.id %}"> {{ exp.order }}</a></td>
+                <td> {{ exp.get_type_display }}</td>
+                <td> {{ exp.amount }}</td>
+                <td> {% if exp.note %}{{ exp.note }} {% endif %}</td>
+                <td> <a href="{% url 'del_expense' id=exp.id %}"> 删除 </a>  </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

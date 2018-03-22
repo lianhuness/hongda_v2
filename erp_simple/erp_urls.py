@@ -31,6 +31,7 @@ urlpatterns = [
     ])),
 
     url(r'^erp/', include([
+        url(r'^list_all_jhd', views.list_all_jhd, name='list_all_jhd'),
         url(r'^search_jhd$', views.search_jhd, name='erp_search_jhd'),
 
     ])),

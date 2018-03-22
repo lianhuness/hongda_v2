@@ -2,7 +2,7 @@
     <socket>:8077</socket>
     <chdir>/home/pi/github/hongda_v2/</chdir>
     <wsgi-file>hongda_v2/wsgi.py</wsgi-file>
-    <processes>1</processes>
+    <processes>5</processes>
     <daemonize>/tmp/uwsgi.log</daemonize>
     <plugins>python</plugins>
     <LANG>en_US.UTF-8</LANG>

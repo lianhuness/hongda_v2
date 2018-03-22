@@ -10,14 +10,16 @@ def isManager(self):
 
 
 def isSales(self):
-    return self.isManager() or self.has_perm('crm.add_order')
+    return self.has_perm('crm.add_order')
 
-
+def isSalesManager(self):
+    return self.has_perm('crm.delete_order')
 
 User.add_to_class("canViewOrder",canViewOrder)
 
 User.add_to_class('isManager', isManager)
 
 User.add_to_class('isSales', isSales)
+User.add_to_class("isSalesManager", isSalesManager)
 
 

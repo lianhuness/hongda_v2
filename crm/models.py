@@ -137,6 +137,8 @@ ORDER_STATUS_CHOICES = (
     ('COMPLETE', '完成')
 )
 
+
+from django.db.models import Sum
 class Order(models.Model):
     user = models.ForeignKey(User)
     client = models.ForeignKey(Client)
@@ -155,6 +157,10 @@ class Order(models.Model):
 
     def __str__(self):
         return self.internalID
+
+    def totalExpense(self):
+        exp = self.orderexpense_set.aggregate(Sum('amount'))
+        return exp['amount__sum']
 
     class Meta:
         ordering = ['created_date']
@@ -180,6 +186,36 @@ COLOR_PRODUCT_TYPE_CHOICE = (
     (5, u'多色乳胶管'),
     (20, u'其他')
 )
+
+EXPENSE_TYPE_CHOICE=(
+    (1, u'制版费'),
+    (2, u'运费'),
+    (3, u'进仓费'),
+    (4, u'返工费'),
+    (5, u'快递费'),
+    (6, u'采购费用'),
+    (7, u'其他'),
+
+)
+
+class OrderExpense(models.Model):
+    order = models.ForeignKey(Order)
+    user = models.ForeignKey(User)
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    type = models.IntegerField(choices=EXPENSE_TYPE_CHOICE, default=7, verbose_name=u'费用种类')
+    amount = models.DecimalField(decimal_places=2, max_digits=7, verbose_name=u'金额')
+    note = models.CharField(max_length = 100, blank=True, null=True, verbose_name=u'备注(可空白)')
+
+    def __unicode__(self):
+        return u"%s - %s" %(self.get_type_display(), self.amount)
+
+    def __str__(self):
+        return self.__unicode__()
+
+    class Meta:
+        ordering = ['-created_date']
+
 # class Color(models.Model):
 #     user = models.ForeignKey(User)
 #     client = models.ForeignKey(Client, verbose_name=u'客户')
