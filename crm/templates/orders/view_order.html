@@ -9,12 +9,16 @@
     查看订单 <mark> {{ order }} </mark> - {{ order.created_date|date:"Y/m/d" }}
 </h1>
 
-    <table class="table">
-        <tr>
-            <td> <a href={% url 'erp_add_jihuadan' id=order.id %}> 添加生产计划单 </a></td>
-            <td> <a href={% url 'add_order_expense' id=order.id %}> 添加订单费用 </a> </td>
-        </tr>
-    </table>
+    <div class="row">
+        <table class="table">
+            <tr>
+                <td> <a href={% url 'erp_add_jihuadan' id=order.id %}> 添加生产计划单 </a></td>
+                <td> <a href={% url 'add_order_expense' id=order.id %}> 添加订单费用 </a> </td>
+            </tr>
+        </table>
+    </div>
+
+
 
     <div class="row">
         <table class="table table-striped">

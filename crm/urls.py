@@ -44,9 +44,6 @@ urlpatterns = [
 
         url(r'^add_expense/(?P<id>[0-9]+)$', views.add_order_expense, name='add_order_expense'),
         url(r'^expense_list$', views.expense_list, name='expense_list'),
-url(r'^del_expense/(?P<id>[0-9]+)$', views.del_expense, name='del_expense'),
+        url(r'^del_expense/(?P<id>[0-9]+)$', views.del_expense, name='del_expense'),
     ]), name='orders'),
-
-
-
 ]

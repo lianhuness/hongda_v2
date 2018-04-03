@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 
 def canViewOrder(self):
     return self.has_perm('crm.delete_order')
+def canViewCatelog(self):
+    return self.has_perm('catalog.add_product')
 
 def isManager(self):
     return self.has_perm('auth.change_user')
@@ -21,5 +23,6 @@ User.add_to_class('isManager', isManager)
 
 User.add_to_class('isSales', isSales)
 User.add_to_class("isSalesManager", isSalesManager)
+User.add_to_class('canViewCatelog', canViewCatelog)
 
 

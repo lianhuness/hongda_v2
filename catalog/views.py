@@ -5,28 +5,30 @@ from django.contrib import messages
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import  Product
 from django import forms
+from django.contrib.auth.decorators import permission_required
 
-PRODUCT_SEARCH_TYPE_CHOICE = (
-    (0, u'产品名称'),
-    (1, u'产品分类')
-)
+
+
 class ProductSearchForm(forms.Form):
-    type = forms.ChoiceField(choices=PRODUCT_SEARCH_TYPE_CHOICE, label=u'类别')
-    keywords = forms.CharField(label=u'关键词')
+    catelog = forms.CharField(label=u'产品分类', required=False)
+    name = forms.CharField(label=u'名称', required=False)
+    material = forms.CharField(label=u'材料', required=False)
 
+
+@permission_required('catalog.add_product')
 def catelog_home(request):
     products = []
     if request.method == 'POST':
         form = ProductSearchForm(request.POST)
-
         if form.is_valid():
-            if form.cleaned_data['type'] == '0':
-                # 产品名称
-                products = Product.objects.filter(name__contains=form.cleaned_data['keywords']).all()
-            elif form.cleaned_data['type']== '1':
-                products = Product.objects.filter(catelog__contains=form.cleaned_data['keywords']).all()
-            else:
-                products = []
+            products = Product.objects
+            if form.cleaned_data['catelog']:
+                products = products.filter(catelog__contains=form.cleaned_data['catelog'])
+            if form.cleaned_data['name']:
+                products = products.filter(name__contains=form.cleaned_data['name'])
+            if form.cleaned_data['material']:
+                products = products.filter(material__contains=form.cleaned_data['material'])
+            products = products.all()
     else:
         form = ProductSearchForm()
         products = Product.objects.all()
@@ -42,7 +44,7 @@ class ProductForm(forms.ModelForm):
         super(ProductForm, self).__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()
 
-
+@permission_required('catalog.add_product')
 def add_product(request):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES)

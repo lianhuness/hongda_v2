@@ -11,39 +11,62 @@
 
     <div class="row">
         <h2> 产品信息 - <a href="{% url 'edit_product' id=p.id %}"> 修改 </a></h2>
-        <table class="table">
-        <tr>
-            <th> 产品名称 </th>
-            <th> 产品分类</th>
-            <th> 成本价格</th>
-            <th> 销售价格 </th>
-            <th> 最少起订量 </th>
-            <th> 材料 </th>
-            <th> 重量 </th>
-            <th> 尺寸 </th>
 
-        </tr>
-            <tr>
-                <td> {{ p.name }}  </td>
-                <td> {{ p.catelog }}</td>
-                 <td> {{ p.costprice }}RMB</td>
-                <td> {{  p.suggestprice }} RMB </td>
-                <td> {{  p.suggestmoq }}</td>
-                <td> {{ p.material }}</td>
-                <td> {{  p.weight }}g</td>
-                <td> {{ p.size }}</td>
-            </tr>
-            <tr>
-                <td span="4">
-                    {% if p.image %} <img class='mid-image' src="{{ p.image.url }}"/>  {% endif %}
+        <div class="row">
 
-                </td>
-                <td span="3"> {{ p.note|linebreaks }}</td>
-            </tr>
-        </table>
+
+            <div class="col-md-8">
+                <table class="table">
+                    <tr>
+                        <th> 产品名称 </th>
+                        <th> 产品分类</th>
+                        <th> 成本价格</th>
+                        <th> 销售价格 </th>
+                        <th> 最少起订量 </th>
+                        <th> 材料 </th>
+                        <th> 重量 </th>
+                        <th> 尺寸 </th>
+                    </tr>
+                    <tr>
+                        <td> {{ p.name }}  </td>
+                        <td> {{ p.catelog }}</td>
+                        <td> {{ p.costprice }}RMB</td>
+                        <td> {{  p.suggestprice }} RMB </td>
+                        <td> {{  p.suggestmoq }}</td>
+                        <td> {{ p.material }}</td>
+                        <td> {{  p.weight }}g</td>
+                        <td> {{ p.size }}</td>
+                    </tr>
+                </table>
+
+                <table class="table">
+                    <tr> <th class='text-center'> 说明 </th> </tr>
+                    <tr> <td> {{ p.note|linebreaks }}</td></tr>
+                </table>
+
+            </div>
+
+            <div class="col-md-4">
+                <table class="table">
+                    <tr> <th class="text-center"> 图片</th>  </tr>
+                    <tr> <td>
+                        {% if p.image %} <img class="col-md-12" src="{{ p.image.url }}"/>  {% endif %}
+                    </td></tr>
+                </table>
+
+            </div>
+
     </div>
 
 
+    <div class="row">
+        <h2> 其他图片 </h2>
+        {% for log in p.productlog_set.all %}
+            {% if log.image %}
+                <image class="col-md-4" src="{{ log.image.url }}" />
+            {% endif %}
+        {% endfor %}
+    </div>
 
     <div class="row">
         <h2> 历史记录 </h2>

@@ -44,6 +44,8 @@ class ProductLog(models.Model):
     image = models.ImageField(upload_to=product_log_image_uploadto, blank=True, null=True, verbose_name=u'图片')
     created_date = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        ordering=['-created_date']
     def __unicode__(self):
         return self.log
     def __str__(self):

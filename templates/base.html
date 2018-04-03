@@ -40,8 +40,9 @@
 
               <ul class="nav navbar-nav">
                   {% if request.user.is_authenticated %}
+                      {% if user.canViewCatelog %}
                       <li><a href="{%  url 'catelog_home' %}">产品列表</a></li>
-
+                        {% endif %}
                       {#                      {% if perms.auth.change_user %}#}
                       {% if user.isManager %}
                           <li class="dropdown">

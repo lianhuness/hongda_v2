@@ -130,11 +130,10 @@ def contact_upload_to(instance, filename):
 
 
 ORDER_STATUS_CHOICES = (
-    ('DRAFT', '草稿'),
-    ('SUBMIT', '提交'),
+    ('PENDING', '进行中'),
     ('DELETE', '取消'),
     ('SEND', '发货'),
-    ('COMPLETE', '完成')
+    ('COMPLETE', '货款两清')
 )
 
 
@@ -143,7 +142,7 @@ class Order(models.Model):
     user = models.ForeignKey(User)
     client = models.ForeignKey(Client)
     contactor = models.ForeignKey(Contactor)
-    status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='DRAFT')
+    status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='PENDING')
 
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='订单金额')
     currency = models.CharField(max_length=5, choices=(('RMB', 'RMB'), ('USD', 'USD')), default='RMB')
