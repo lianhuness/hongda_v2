@@ -37,6 +37,7 @@
         <table class="table table-bordered table-striped">
             <tr>
                 <th> CID </th>
+                <th> 销售代表</th>
                 <th> 客户 </th>
                 <th> 地区 </th>
                 <th> 重要性</th>
@@ -47,7 +48,7 @@
             {% for client in clients %}
                 <tr>
                     <td><a href={% url 'view_client' id=client.id %}> {{  client.cid  }}</a> </td>
-
+                    <td> {{ client.user }}</td>
                     <td> {% if client.needUpdate %}
                         <strong>{{ client.company }} <strong/>
                         {% else %}

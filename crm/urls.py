@@ -36,7 +36,7 @@ urlpatterns = [
 
 
     url(r'^orders/', include([
-        url(r'^$', views.list_orders, name='list_orders'),
+        url(r'^listorders$', views.list_orders, name='list_orders'),
         url(r'^view/(?P<id>[0-9]+)$', views.view_order, name='view_order'),
         url(r'^edit/(?P<id>[0-9]+)$', views.edit_order, name='edit_order'),
         url(r'^add/(?P<id>[0-9]+)$', views.add_order, name='add_order'),

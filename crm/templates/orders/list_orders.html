@@ -5,19 +5,46 @@
 
 {% block container %}
 
-<h1>
-    我的订单
-</h1>
+    <h1>
+        我的订单 - {{ order_list|length }}
+    </h1>
 
-    <table class="table table-striped">
-        {% for order in order_list %}
-        <tr>
-            <td> <a href="{% url 'view_order' id=order.id %}">{{ order }}</a></td>
-            <td> {{ order.client }}</td>
-            <td> {{ order.get_status_display }}</td>
-            <td> {{ order.jhd_set.all|length }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <div class="row">
 
+
+        <table class="table table-bordered">
+            <tr>
+                <td> <a href="{% url 'list_orders' %}"> 显示所有 </a> </td>
+            </tr>
+        </table>
+
+    </div>
+    <div class="row">
+        <form action="{% url 'list_orders' %}" method="post">
+            {% csrf_token %}
+            {{ searchform }}
+            <input type="submit" value="搜索"/>
+        </form>
+    </div>
+
+    <div class="row">
+
+
+        <table class="table table-striped">
+            <tr>
+                <th> 内部跟踪号</th>
+                <th> 客户 </th>
+                <th> 状态 </th>
+                <th> 计划单数字 </th>
+            </tr>
+            {% for order in order_list %}
+                <tr>
+                    <td> <a href="{% url 'view_order' id=order.id %}">{{ order }}</a></td>
+                    <td> {{ order.client }}</td>
+                    <td> {{ order.get_status_display }}</td>
+                    <td> {{ order.jhd_set.all|length }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}

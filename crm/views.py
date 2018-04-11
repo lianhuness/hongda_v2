@@ -61,6 +61,7 @@ from .models import CLIENT_SOURCE, CLIENT_LEVEL
 class Listclient_form(forms.Form):
     source = forms.ChoiceField(label=u'客户来源')
     level = forms.ChoiceField(label = u'客户等级')
+    user = forms.CharField(label=u'销售代表', required=False)
     name = forms.CharField(label=u'客户', max_length=50, required=False)
 
     def __init__(self, *args, **kwargs):
@@ -77,27 +78,36 @@ class Listclient_form(forms.Form):
 @permission_required('crm.add_order')
 def list_all_clients(request):
     clients = request.user.client_set.all()
+    form = Listclient_form()
+
+    if request.user.isManager():
+        clients = Client.objects.all()
+    else:
+        form.fields['user'].widget = forms.HiddenInput()
+
     if request.method == 'POST':
         form = Listclient_form(request.POST)
         if form.is_valid():
             source = int(form.cleaned_data['source'])
             level = int(form.cleaned_data['level'])
             name = form.cleaned_data['name']
+            user = form.cleaned_data['user']
             if source>= 0:
                 clients = clients.filter(source=source).all()
             if level >=0:
                 clients = clients.filter(level = level).all()
             if form.cleaned_data['name']:
                 clients = clients.filter(company__contains=name).all()
-    else:
-        form = Listclient_form()
+            if form.cleaned_data['user']:
+                clients=clients.filter(user__username=user).all()
+
     return render(request, 'clients/list_clients.html', {'clients': clients, 'form': form, 'level':0})
 
 from django.contrib.auth.models import User, Permission
 
 class ChangeClientRepForm(forms.Form):
     p = Permission.objects.filter(codename='add_order')
-    user = forms.ModelChoiceField(queryset=User.objects.filter(user_permissions=p).all())
+    user = forms.ModelChoiceField(label=u'更改销售代表', queryset=User.objects.filter(user_permissions=p).all())
 
 @permission_required('crm.add_order')
 def change_client_rep(request, id):
@@ -197,15 +207,51 @@ def edit_contactor(request, id):
     return render(request, 'clients/edit_contactor.html', {'form': form, 'contactor': contactor})
 
 
+
+
+
 # Orders
+
+from .models import ORDER_STATUS_CHOICES
+class ListOrderForm(forms.Form):
+    status = forms.ChoiceField(label=u'状态')
+    user = forms.CharField(label=u'销售代表', required=False)
+    client = forms.CharField(label=u'客户', max_length=50, required=False)
+    internalid = forms.CharField(label=u'内部跟踪号', max_length=10, required=False)
+    externalid = forms.CharField(label = u'外部跟踪号', max_length=10, required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(ListOrderForm, self).__init__(*args, **kwargs)
+        statuschoice = [('ALL', 'ALL')]
+        statuschoice.extend(ORDER_STATUS_CHOICES)
+        self.fields['status'].choices = statuschoice
+        self.fields['status'].initial =statuschoice[0]
+
 @permission_required('crm.add_order')
 def list_orders(request):
-    order_list = request.user.order_set.all()
-    return render(request, 'orders/list_orders.html', {'order_list': order_list})
+    order_list = request.user.order_set
+    form = ListOrderForm()
+    if request.user.isManager():
+        order_list = Order.objects
 
+    if request.method == "POST":
+        form = ListOrderForm(request.POST)
+        if form.is_valid():
+            status = form.cleaned_data['status']
+            if status != 'ALL':
+                order_list = order_list.filter(status = status)
+            if form.cleaned_data['user']:
+                order_list = order_list.filter(user__username=form.cleaned_data['user'])
+            if form.cleaned_data['client']:
+                order_list = order_list.filter(client__company__contains = form.cleaned_data['client'])
+            if form.cleaned_data['internalid']:
+                order_list = order_list.filter(internalID__contains =form.cleaned_data['internalid'])
+            if form.cleaned_data['externalid']:
+                order_list = order_list.filter(externalID__contains =form.cleaned_data['externalid'])
 
-def addOrderRecord(request, order,  msg):
-    messages.success(request, msg)
+    order_list = order_list.all()
+    return render(request, 'orders/list_orders.html', {'order_list': order_list, 'searchform': form})
+
 
 @permission_required('crm.add_order')
 def add_order(request, id):
@@ -217,7 +263,7 @@ def add_order(request, id):
         form = OrderForm(request.POST, request.FILES)
         if form.is_valid():
             order = form.save()
-            addOrderRecord(request, order, '订单(%s) 创立成功')
+            order.addLog(request,  '订单(%s) 创立成功'%(order.internalID))
             return redirect(reverse('view_order', kwargs={'id': order.id}))
     else:
         form = OrderForm()
@@ -238,7 +284,12 @@ def edit_order(request, id):
         form = OrderForm(request.POST, request.FILES, instance=order)
         if form.is_valid():
             order = form.save()
-            addOrderRecord(request, order, '%s 修改订单成功 '%request.user)
+            msg = ""
+            for fld in form.changed_data:
+                msg = "%s, %s" %(msg, "%s: %s -> %s"%(fld, form.initial[fld], form.cleaned_data[fld]))
+                print(msg)
+            if len(msg)>0:
+                order.addLog(request, u'修改订单 %s'%msg)
             return redirect(reverse('view_order', kwargs={'id': order.id}))
     else:
         form = OrderForm(instance=order)

@@ -11,3 +11,4 @@ backend/__pycache__/views.cpython-36.pyc
 
 .idea/workspace.xml
 *.pyc
+erp/migrations/0001_initial.py

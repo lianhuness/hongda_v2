@@ -78,6 +78,22 @@
             </tr>
         {% endfor %}
     </table>
+
+
+
+    <div class="row">
+        <h2> 历史记录 </h2>
+        <table class="table">
+            {% for log in order.orderlog_set.all %}
+                <tr>
+                    <td> {{ log.created_date }}</td>
+                    <td> {{ log.user  }}</td>
+                    <td> {{ log.log }}</td>
+                    <td>  {%  if log.file %} <a href={{ log.file.url }}> FILE </a> {% endif %}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
 {##}
 {#    <h2> 收款记录</h2>#}
 {##}

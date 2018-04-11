@@ -38,7 +38,7 @@ class OrderForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(OrderForm, self).__init__(*args, **kwargs)
         self.fields['user'].widget = forms.HiddenInput()
-        self.fields['status'].widget = forms.HiddenInput()
+        # self.fields['status'].widget = forms.HiddenInput()
         # self.fields['trueAmount'].widget = forms.HiddenInput()
         # user = models.ForeignKey(User)
         # client = models.ForeignKey(Client)

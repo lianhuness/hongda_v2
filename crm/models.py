@@ -125,7 +125,9 @@ class Contactor(models.Model):
         return self.name
 
 def contact_upload_to(instance, filename):
-    directory =  '/'.join(['Order', instance.internalID, 'contract', filename])
+    return "None"
+def order_file_upload_to(instance, filename):
+    directory =  '/'.join(['Order', instance.internalID,  filename])
     return directory
 
 
@@ -142,7 +144,7 @@ class Order(models.Model):
     user = models.ForeignKey(User)
     client = models.ForeignKey(Client)
     contactor = models.ForeignKey(Contactor)
-    status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='PENDING')
+    status = models.CharField(max_length=10, choices=ORDER_STATUS_CHOICES, default='PENDING', verbose_name=u'状态')
 
     amount = models.DecimalField(max_digits=10, decimal_places=2, default=0, help_text='订单金额')
     currency = models.CharField(max_length=5, choices=(('RMB', 'RMB'), ('USD', 'USD')), default='RMB')
@@ -150,7 +152,7 @@ class Order(models.Model):
 
     externalID = models.CharField(max_length=50, default='N/A', help_text='客户订单号')
     internalID = models.CharField(max_length=20, unique=True, help_text='内部跟踪号')
-    contract = models.FileField(upload_to=contact_upload_to)
+    contract = models.FileField(upload_to=order_file_upload_to)
     created_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now = True)
 
@@ -161,8 +163,30 @@ class Order(models.Model):
         exp = self.orderexpense_set.aggregate(Sum('amount'))
         return exp['amount__sum']
 
+    def addLog(self, request, log):
+        messages.success(request, log)
+        self.orderlog_set.create( user = request.user, log=u'%s-%s'%(request.user, log ))
+
     class Meta:
         ordering = ['created_date']
+
+
+
+class OrderLog(models.Model):
+    user = models.ForeignKey(User)
+    order = models.ForeignKey(Order)
+    log = models.TextField(max_length=500, verbose_name=u'记录', blank=True, null=True)
+    file = models.FileField(upload_to=order_file_upload_to, blank=True, null=True, verbose_name=u'文件')
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_date']
+
+    def __unicode__(self):
+        return self.log
+
+    def __str__(self):
+        return self.__unicode__()
 
 
 def update_trueAmount(sender, instance, **kwargs):

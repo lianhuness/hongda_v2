@@ -10,6 +10,7 @@ from django.contrib.auth.decorators import permission_required
 
 
 class ProductSearchForm(forms.Form):
+    user = forms.CharField(label=u'创建人', required=False)
     catelog = forms.CharField(label=u'产品分类', required=False)
     name = forms.CharField(label=u'名称', required=False)
     material = forms.CharField(label=u'材料', required=False)
@@ -28,6 +29,8 @@ def catelog_home(request):
                 products = products.filter(name__contains=form.cleaned_data['name'])
             if form.cleaned_data['material']:
                 products = products.filter(material__contains=form.cleaned_data['material'])
+            if form.cleaned_data['user']:
+                products = products.filter(user__username=form.cleaned_data['user'])
             products = products.all()
     else:
         form = ProductSearchForm()
@@ -63,8 +66,14 @@ def edit_product(request, id):
     if request.method == 'POST':
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
+            # import pdb
+            # pdb.set_trace()
             product = form.save()
-            product.addLog(request, 'Product Information Updated!')
+            msg = ""
+            for fld in form.changed_data:
+                msg = "%s, %s"%(msg, "%s from %s to %s"%(fld, form.initial[fld], form.cleaned_data[fld]))
+            if len(msg) > 0:
+                product.addLog(request, 'Product Information Updated! %s '%msg )
             return redirect(reverse('view_product', kwargs={'id': product.id}))
     else:
         form = ProductForm(instance=product)

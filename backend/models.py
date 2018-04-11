@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 # Create your models here.
 
 def canViewOrder(self):
-    return self.has_perm('crm.delete_order')
+    return self.has_perm('crm.delete_order') or self.isManager()
+
 def canViewCatelog(self):
     return self.has_perm('catalog.add_product')
 
@@ -12,10 +13,10 @@ def isManager(self):
 
 
 def isSales(self):
-    return self.has_perm('crm.add_order')
+    return self.has_perm('crm.add_order') or self.isManager()
 
 def isSalesManager(self):
-    return self.has_perm('crm.delete_order')
+    return self.has_perm('crm.delete_order') or self.isManager()
 
 User.add_to_class("canViewOrder",canViewOrder)
 

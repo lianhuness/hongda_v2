@@ -52,8 +52,6 @@ class ProductLog(models.Model):
         return self.__unicode__()
 
 
-
-
 def catelog_image_uploadto(instance, filename):
     directory = '/'.join(['catelog', instance.catelog.name, instance.name, filename])
     return directory
